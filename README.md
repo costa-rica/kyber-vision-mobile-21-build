@@ -1,6 +1,14 @@
-# Kyber Vision
+![Kyber Vision Mobile Logo](./src/assets/images/multi-use/kyberVisionLogo01.png)
 
-## Folder Structure
+#### v 0.20.0
+
+## Context Prompt for AI
+
+### App Architecture
+
+The app is built using React Native and Expo and TypeScript. It uses a "classic" navigation approach with Stack Navigator. The entry point to the app is the index.tsx file but the App.tsx file is the main app component.
+
+### Folder Structure
 
 ```
 src/
@@ -23,4 +31,13 @@ src/
       AdminUserCard.tsx
     utilities/
       UploadVideoScreen.tsx
+  assets/
+  reducers/
+    review.ts
+    script.ts
+    sync.ts
+    team.ts
+    upload.ts
+    user.ts
+  types/
 ```

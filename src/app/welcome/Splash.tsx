@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
+import type { SplashScreenProps } from "../../types/navigation";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-// const Splash = () => {
-export default function Splash({ navigation }: any) {
+export default function Splash({ navigation }: SplashScreenProps) {
+	console.log("Kvber Vision Mobile 20 - Splash");
 	return (
 		<View style={styles.container}>
 			<Text>Splash</Text>
