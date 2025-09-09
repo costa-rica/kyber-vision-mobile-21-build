@@ -1,0 +1,75 @@
+import { StyleSheet, View, Image } from "react-native";
+import React, { type ReactNode } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import type {
+	NavigationProp,
+	ParamListBase,
+	RouteProp,
+} from "@react-navigation/native";
+import ButtonKvImage from "../buttons/ButtonKvImage";
+
+type Props = { children: ReactNode };
+export default function ScreenFrame({ children }: Props) {
+	const navigation = useNavigation<NavigationProp<ParamListBase>>();
+	const route = useRoute<RouteProp<ParamListBase, string>>();
+	const handleBackPress = async () => {
+		navigation.goBack();
+	};
+	return (
+		<View style={styles.container}>
+			<View style={styles.containerTop}>
+				<Image
+					source={require("../../assets/images/screen-frame/imgBackgroundBottomFade.png")}
+				/>
+
+				{navigation && (
+					<View style={styles.btnBack}>
+						<ButtonKvImage
+							onPress={() => {
+								handleBackPress();
+							}}
+						>
+							<Image
+								source={require("../../assets/images/screen-frame/btnBackArrowDelete.png")}
+							/>
+						</ButtonKvImage>
+					</View>
+				)}
+				<Image
+					source={require("../../assets/images/multi-use/KyberV2Shiny.png")}
+					style={styles.imgLogo}
+				/>
+			</View>
+			<View style={styles.containerBottom}>{children}</View>
+		</View>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+	containerTop: {
+		backgroundColor: "#fff",
+		alignItems: "center",
+		justifyContent: "center",
+		height: "35%",
+		overflow: "hidden",
+	},
+	btnBack: {
+		position: "absolute",
+		top: 50,
+		left: 20,
+		// zIndex: 10,
+	},
+	imgLogo: {
+		position: "absolute",
+		bottom: 0,
+	},
+	containerBottom: {
+		flex: 1,
+		backgroundColor: "#fff",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+});
