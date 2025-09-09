@@ -7,6 +7,7 @@ import type {
 	RouteProp,
 } from "@react-navigation/native";
 import ButtonKvImage from "../buttons/ButtonKvImage";
+import BackArrow from "../../assets/images/screen-frame/btnBackArrow.svg";
 
 type Props = { children: ReactNode };
 export default function ScreenFrame({ children }: Props) {
@@ -29,9 +30,7 @@ export default function ScreenFrame({ children }: Props) {
 								handleBackPress();
 							}}
 						>
-							<Image
-								source={require("../../assets/images/screen-frame/btnBackArrowDelete.png")}
-							/>
+							<BackArrow width={28} height={28} />
 						</ButtonKvImage>
 					</View>
 				)}
