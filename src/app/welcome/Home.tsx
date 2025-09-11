@@ -72,9 +72,14 @@ export default function Home({ navigation }: HomeScreenProps) {
 							onPress={() => setDisplayTeamList(!displayTeamList)}
 							style={styles.btnSelectTribe}
 						>
-							<Text style={{ color: "white", fontSize: 24 }}>
-								{displayTeamList ? "↑" : "↓"}
-							</Text>
+							<Image
+								source={
+									displayTeamList
+										? require("../../assets/images/multi-use/btnBackArrow.png")
+										: require("../../assets/images/multi-use/btnDownArrow.png")
+								}
+								style={{ width: 40, height: 40 }}
+							/>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -157,27 +162,38 @@ export default function Home({ navigation }: HomeScreenProps) {
 							Scripting
 						</ButtonKvStd>
 						<ButtonKvStd
-							onPress={() => handleNavigationWithTodo("ReviewSelectionScreen", "Review")}
+							onPress={() =>
+								handleNavigationWithTodo("ReviewSelectionScreen", "Review")
+							}
 							style={styles.btnHomeNavigation}
 						>
 							Review
 						</ButtonKvStd>
 						<ButtonKvNoDefaultTextOnly
-							onPress={() => handleNavigationWithTodo("UploadVideoScreen", "Upload Video")}
+							onPress={() =>
+								handleNavigationWithTodo("UploadVideoScreen", "Upload Video")
+							}
 							styleView={styles.btnHomeNavigationUploadVideo}
 							styleText={styles.txtHomeNavigationUploadVideo}
 						>
 							Upload Video
 						</ButtonKvNoDefaultTextOnly>
 						<ButtonKvNoDefaultTextOnly
-							onPress={() => handleNavigationWithTodo("ScriptingSyncVideoSelection", "Sync Video")}
+							onPress={() =>
+								handleNavigationWithTodo(
+									"ScriptingSyncVideoSelection",
+									"Sync Video"
+								)
+							}
 							styleView={styles.btnHomeNavigationUploadVideo}
 							styleText={styles.txtHomeNavigationUploadVideo}
 						>
 							Sync Video
 						</ButtonKvNoDefaultTextOnly>
 						<ButtonKvNoDefaultTextOnly
-							onPress={() => handleNavigationWithTodo("AdminSettings", "Admin Settings")}
+							onPress={() =>
+								handleNavigationWithTodo("AdminSettings", "Admin Settings")
+							}
 							styleView={styles.btnHomeNavigationUploadVideo}
 							styleText={styles.txtHomeNavigationUploadVideo}
 						>
@@ -232,8 +248,20 @@ const styles = StyleSheet.create({
 		height: 50,
 	},
 	vwCapsuleExpanded: {
-		flexDirection: "column",
-		alignItems: "flex-start",
+		// flexDirection: "column",
+		// alignItems: "flex-start",
+		// backgroundColor: "#806181",
+		// borderRadius: 10,
+		// padding: 5,
+		// width: Dimensions.get("window").width * 0.8,
+		// position: "absolute",
+		// top: 0,
+		// zIndex: 1,
+		// minHeight: 50,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		gap: 10,
 		backgroundColor: "#806181",
 		borderRadius: 10,
 		padding: 5,
@@ -241,7 +269,6 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		top: 0,
 		zIndex: 1,
-		minHeight: 50,
 	},
 	vwLeftCapsule: {
 		flex: 1,

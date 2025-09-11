@@ -21,7 +21,7 @@ import { loginUser } from "../../reducers/user";
 
 export default function Register({ navigation }: RegisterScreenProps) {
 	const dispatch = useDispatch();
-	
+
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [email, setEmail] = useState("");
@@ -85,7 +85,8 @@ export default function Register({ navigation }: RegisterScreenProps) {
 				setMessage("Successfully registered");
 				navigation.navigate("SelectTeam");
 			} else {
-				const errorMessage = resJson?.error || `There was a server error: ${response.status}`;
+				const errorMessage =
+					resJson?.error || `There was a server error: ${response.status}`;
 				setMessage(errorMessage);
 				Alert.alert("Registration Error", errorMessage);
 			}
@@ -265,22 +266,24 @@ export default function Register({ navigation }: RegisterScreenProps) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#FDFDFD",
+		// backgroundColor: "#FDFDFD",
 		width: "100%",
+		// backgroundColor: "blue",
 	},
 	containerTop: {
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		padding: 20,
+		// padding: 20,
 	},
 	vwInputGroup: {
-		width: "90%",
+		width: Dimensions.get("window").width * 0.9,
 		alignItems: "flex-start",
 		marginTop: 15,
+		// backgroundColor: "green",
 	},
 	vwInputGroupLogin: {
-		width: "90%",
+		// width: "90%",
 		alignItems: "center",
 		paddingTop: 30,
 	},
