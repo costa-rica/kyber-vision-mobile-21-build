@@ -10,9 +10,6 @@ import { loginUser, logoutUser } from "../../reducers/user";
 import { userReducerOffline } from "../../data/userReducerOffline";
 
 export default function Splash({ navigation }: SplashScreenProps) {
-	console.log("Kyber Vision Mobile 20 - Splash");
-
-	// const [isSubmitting, setIsSubmitting] = useState(false);
 	const dispatch = useDispatch();
 	const userReducer = useSelector((state: RootState) => state.user);
 

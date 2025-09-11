@@ -4,6 +4,7 @@ export type RootStackParamList = {
   Splash: undefined;
   Login: undefined;
   Register: undefined;
+  Logout: undefined;
   SelectTeam: undefined;
   CreateTeam: undefined;
   Home: undefined;
@@ -23,5 +24,7 @@ export type SplashScreenProps = NativeStackScreenProps<
 export type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export type RegisterScreenProps = NativeStackScreenProps<RootStackParamList, 'Register'>;
+
+export type LogoutScreenProps = NativeStackScreenProps<RootStackParamList, 'Logout'>;
 
 export type SelectTeamScreenProps = NativeStackScreenProps<RootStackParamList, 'SelectTeam'>;
