@@ -8,14 +8,22 @@ import Login from "./welcome/Login";
 import type { RootStackParamList } from "../types/navigation";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "../types/store";
+
 const Index = () => {
 	return (
-		<NavigationContainer>
-			<Stack.Navigator screenOptions={{ headerShown: false }}>
-				<Stack.Screen name="Splash" component={Splash} />
-				<Stack.Screen name="Login" component={Login} />
-			</Stack.Navigator>
-		</NavigationContainer>
+		<Provider store={store}>
+			<PersistGate persistor={persistor}>
+				<NavigationContainer>
+					<Stack.Navigator screenOptions={{ headerShown: false }}>
+						<Stack.Screen name="Splash" component={Splash} />
+						<Stack.Screen name="Login" component={Login} />
+					</Stack.Navigator>
+				</NavigationContainer>
+			</PersistGate>
+		</Provider>
 	);
 };
 
