@@ -4,6 +4,8 @@ export type RootStackParamList = {
   Splash: undefined;
   Login: undefined;
   SelectTeam: undefined;
+  CreateTeam: undefined;
+  Home: undefined;
 };
 
 export type RootStackNavigation = NativeStackNavigationProp<RootStackParamList>;
@@ -18,3 +20,5 @@ export type SplashScreenProps = NativeStackScreenProps<
 >;
 
 export type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+export type SelectTeamScreenProps = NativeStackScreenProps<RootStackParamList, 'SelectTeam'>;

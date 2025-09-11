@@ -109,27 +109,28 @@ Key Features Implemented
 
 1. Form Components:
 
-   - Email input field with envelope icon
-   - Password input field with show/hide toggle functionality
-   - Proper input validation and keyboard types
+- Email input field with envelope icon
+- Password input field with show/hide toggle functionality
+- Proper input validation and keyboard types
 
 2. Authentication Logic:
 
-   - API integration for login endpoint
-   - Redux dispatch for successful login
-   - Error handling with user-friendly alerts
-   - Environment-based development credentials
+- API integration for login endpoint
+- Redux dispatch for successful login
+- Error handling with user-friendly alerts
+- Environment-based development credentials
 
 3. UI Elements:
 
-   - Forgot Password button (with coming soon placeholder)
-   - Login button with proper styling
-   - Create Account button (with coming soon placeholder)
+- Forgot Password button (with coming soon placeholder)
+- Login button with proper styling
+- Create Account button (with coming soon placeholder)
 
 4. TypeScript Enhancements:
-   - Proper typing for all props and state
-   - Type-safe Redux dispatch and navigation
-   - Enhanced error handling with try-catch blocks
+
+- Proper typing for all props and state
+- Type-safe Redux dispatch and navigation
+- Enhanced error handling with try-catch blocks
 
 Improvements Over Original
 
@@ -142,3 +143,66 @@ Improvements Over Original
 The Login screen now provides complete functionality matching the original JavaScript version while leveraging
 TypeScript's benefits for better code quality and developer experience. All functionality works as expected with no
 type errors.
+
+## Implemented SelectTeam.tsx (commit )
+
+SelectTeam Screen Implementation Summary
+
+Components Created
+
+1. ScreenFrameWithTopChildren (src/components/screen-frames/ScreenFrameWithTopChildren.tsx)
+
+- TypeScript conversion of TemplateViewWithTopChildren
+- Supports modal overlays and top children content
+- Proper TypeScript interfaces for all props
+
+2. ButtonKvNoDefaultTextOnly (src/components/buttons/ButtonKvNoDefaultTextOnly.tsx)
+
+- Custom button for text-only content with no default styling
+- Animation effects and active/inactive states
+- TypeScript interfaces for style props
+
+3. ButtonKvNoDefault (src/components/buttons/ButtonKvNoDefault.tsx)
+
+- Custom button for any content with no default styling
+- Similar functionality to ButtonKvNoDefaultTextOnly but for general content
+
+Redux Implementation
+
+4. Team Reducer (src/reducers/team.ts)
+
+- Complete TypeScript conversion with proper interfaces
+- Manages teams, players, and squad members state
+- Integrated into the store configuration
+
+SelectTeam Screen Features
+
+5. SelectTeam.tsx (src/app/welcome/SelectTeam.tsx)
+
+- API Integration: Fetches teams from server with proper error handling
+- Offline Support: Uses offline team data for guest users
+- Team Selection: FlatList with selectable team rows
+- Invite System: Clipboard integration for invite codes
+- Navigation: Proper back button handling and navigation flow
+- UI Elements:
+  - Welcome message with username
+  - Create team button (placeholder)
+  - Join public squad button (placeholder)
+  - Invite code input with paste functionality
+
+Key Features Implemented
+
+- Full API Integration with proper error handling and TypeScript typing
+- Redux State Management for teams and user contract relationships
+- Clipboard Integration using expo-clipboard for invite codes
+- Responsive Design with proper styling and animations
+- Type Safety throughout all components with comprehensive interfaces
+- Navigation Flow properly integrated with existing screens
+
+Dependencies Added
+
+- expo-clipboard for clipboard functionality
+
+The SelectTeam screen now provides complete functionality matching the original JavaScript version while offering
+improved type safety, better error handling, and modern React patterns. All TypeScript checks pass and the screen
+integrates seamlessly with the existing authentication and navigation flow.

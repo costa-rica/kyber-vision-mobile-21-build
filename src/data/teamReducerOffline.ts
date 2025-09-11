@@ -10,4 +10,4 @@ export const teamReducerOffline = {
       teamName: "PAVVB"
     }
   ]
-} as const;
+};

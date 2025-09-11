@@ -3,6 +3,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { combineReducers } from "@reduxjs/toolkit";
 import user from "../reducers/user";
+import team from "../reducers/team";
 
 // Persist config for user only
 const userPersistConfig = {
@@ -13,6 +14,7 @@ const userPersistConfig = {
 // Root reducer combining all reducers
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, user), // persisted
+  team, // not persisted
   // Add other reducers here as needed
 });
 
