@@ -8,6 +8,7 @@ export type RootStackParamList = {
   SelectTeam: undefined;
   CreateTeam: undefined;
   Home: undefined;
+  ScriptingLiveSelectSession: undefined;
 };
 
 export type RootStackNavigation = NativeStackNavigationProp<RootStackParamList>;
@@ -30,3 +31,5 @@ export type LogoutScreenProps = NativeStackScreenProps<RootStackParamList, 'Logo
 export type SelectTeamScreenProps = NativeStackScreenProps<RootStackParamList, 'SelectTeam'>;
 
 export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
+
+export type ScriptingLiveSelectSessionScreenProps = NativeStackScreenProps<RootStackParamList, 'ScriptingLiveSelectSession'>;

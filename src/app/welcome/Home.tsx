@@ -151,7 +151,7 @@ export default function Home({ navigation }: HomeScreenProps) {
 				<View style={styles.containerTop}>
 					<View style={styles.vwInputGroup}>
 						<ButtonKvStd
-							onPress={() => handleNavigationWithTodo("ScriptingLiveSelectSession", "Scripting")}
+							onPress={() => navigation.navigate("ScriptingLiveSelectSession")}
 							style={styles.btnHomeNavigation}
 						>
 							Scripting

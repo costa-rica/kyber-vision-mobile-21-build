@@ -350,7 +350,7 @@ The Logout screen now provides complete functionality matching the original Java
 improved type safety, better user experience, and modern React patterns. All TypeScript checks pass and the screen
 integrates seamlessly with the existing authentication and navigation flow.
 
-## Implemented Home.tsx (commit )
+## Implemented Home.tsx (commit 9eaa9e7b09f06870722b4e2bebc359e74c4dfac7 )
 
 ### Home Screen Implementation Summary
 
@@ -439,3 +439,53 @@ The Home screen now provides complete functionality matching the original JavaSc
 type safety, better user experience, and modern React patterns. All TypeScript checks pass and the screen
 integrates seamlessly with the existing authentication and navigation flow, serving as the main hub for the
 application's core features.
+
+## Implemented ScriptingLiveSelectSession.tsx (commit )
+
+### Implementation Summary
+
+1. Script Reducer (src/reducers/script.ts)
+
+- Created comprehensive TypeScript interfaces for sessions, actions, points, players, and coordinates
+- Implemented all actions from the reference file with proper typing
+- Added the reducer to the store configuration
+
+2. TemplateViewWithTopChildrenSmall Component (src/components/screen-frames/TemplateViewWithTopChildrenSmall.tsx)
+
+- TypeScript conversion of the reference component
+- Uses existing ButtonKvImage and SVG assets from the project
+- Proper interfaces for all props including modal functionality
+
+3. ModalCreateSession Component (src/components/modals/ModalCreateSession.tsx)
+
+- Complete form with session name, city, date, and time inputs
+- DateTimePicker integration for iOS and Android
+- API integration for session creation
+- Proper error handling and user feedback
+
+4. ScriptingLiveSelectSession Screen (src/app/scripting/ScriptingLiveSelectSession.tsx)
+
+- Session list display with formatted dates
+- Team selection display in header
+- API integration for fetching sessions
+- Modal integration for creating new sessions
+- Proper navigation flow preparation
+
+5. Navigation Integration
+
+- Added ScriptingLiveSelectSession to navigation types
+- Updated App.tsx with the new screen
+- Connected Home screen's "Scripting" button to navigate to the screen
+
+### Key Features Implemented
+
+- Full TypeScript type safety across all components
+- API integration for fetching and creating sessions
+- Redux state management for sessions array
+- Modal functionality for creating new sessions
+- Date/time formatting for session display
+- Responsive design matching the original layout
+- Error handling with user-friendly alerts
+
+The implementation maintains full compatibility with the existing codebase and passes TypeScript compilation. The
+app starts successfully and all navigation flows are properly connected.
