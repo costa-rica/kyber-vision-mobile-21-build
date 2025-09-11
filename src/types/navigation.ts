@@ -3,6 +3,7 @@ import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-n
 export type RootStackParamList = {
   Splash: undefined;
   Login: undefined;
+  Register: undefined;
   SelectTeam: undefined;
   CreateTeam: undefined;
   Home: undefined;
@@ -20,5 +21,7 @@ export type SplashScreenProps = NativeStackScreenProps<
 >;
 
 export type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+export type RegisterScreenProps = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
 export type SelectTeamScreenProps = NativeStackScreenProps<RootStackParamList, 'SelectTeam'>;

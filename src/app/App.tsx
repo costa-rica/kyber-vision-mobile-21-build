@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Splash from "./welcome/Splash";
 import Login from "./welcome/Login";
+import Register from "./welcome/Register";
 import SelectTeam from "./welcome/SelectTeam";
 
 import type { RootStackParamList } from "../types/navigation";
@@ -21,6 +22,7 @@ const Index = () => {
 					<Stack.Navigator screenOptions={{ headerShown: false }}>
 						<Stack.Screen name="Splash" component={Splash} />
 						<Stack.Screen name="Login" component={Login} />
+						<Stack.Screen name="Register" component={Register} />
 						<Stack.Screen name="SelectTeam" component={SelectTeam} />
 					</Stack.Navigator>
 				</NavigationContainer>

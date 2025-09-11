@@ -44,8 +44,7 @@ export default function Splash({ navigation }: SplashScreenProps) {
 						<ButtonKvStd
 							title="Register"
 							onPress={() => {
-								// TODO: Create RegisterScreen
-								console.log("Register - not implemented yet");
+								navigation.navigate("Register");
 							}}
 							style={styles.btnEmailRegister}
 						>

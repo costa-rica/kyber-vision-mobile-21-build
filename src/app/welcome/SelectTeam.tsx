@@ -131,7 +131,7 @@ export default function SelectTeam({ navigation }: SelectTeamScreenProps) {
 					},
 				}
 			);
-			
+
 			let resJson = null;
 			const contentType = response.headers.get("Content-Type");
 			if (contentType?.includes("application/json")) {
@@ -198,7 +198,10 @@ export default function SelectTeam({ navigation }: SelectTeamScreenProps) {
 							onPress={() => {
 								// TODO: Implement CreateTeamScreen
 								console.log("Create team - not implemented yet");
-								Alert.alert("Coming Soon", "Create team feature will be implemented soon.");
+								Alert.alert(
+									"Coming Soon",
+									"Create team feature will be implemented soon."
+								);
 							}}
 							styleView={styles.btnTribe}
 							styleText={styles.btnTribeText}
@@ -211,7 +214,10 @@ export default function SelectTeam({ navigation }: SelectTeamScreenProps) {
 							onPress={() => {
 								// TODO: Implement join public squad
 								console.log("Join a public squad");
-								Alert.alert("Coming Soon", "Join public squad feature will be implemented soon.");
+								Alert.alert(
+									"Coming Soon",
+									"Join public squad feature will be implemented soon."
+								);
 							}}
 							styleView={styles.btnTribe}
 							styleText={styles.btnTribeText}

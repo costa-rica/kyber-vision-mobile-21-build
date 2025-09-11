@@ -161,12 +161,7 @@ export default function Login({ navigation }: LoginScreenProps) {
 					<View style={styles.vwInputGroupCreateAccount}>
 						<ButtonKvStd
 							onPress={() => {
-								// TODO: Implement register functionality
-								console.log("Register");
-								Alert.alert(
-									"Coming Soon",
-									"Registration feature will be implemented soon."
-								);
+								navigation.navigate("Register");
 							}}
 							style={styles.btnCreateAccount}
 						>
