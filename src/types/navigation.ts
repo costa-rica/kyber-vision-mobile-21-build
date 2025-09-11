@@ -28,3 +28,5 @@ export type RegisterScreenProps = NativeStackScreenProps<RootStackParamList, 'Re
 export type LogoutScreenProps = NativeStackScreenProps<RootStackParamList, 'Logout'>;
 
 export type SelectTeamScreenProps = NativeStackScreenProps<RootStackParamList, 'SelectTeam'>;
+
+export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
