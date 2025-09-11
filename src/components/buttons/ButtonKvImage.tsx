@@ -11,12 +11,14 @@ type ButtonKvImageProps = {
 	onPress?: () => void;
 	style?: StyleProp<ViewStyle>;
 	children?: React.ReactNode;
+	disabled?: boolean;
 };
 
 const ButtonKvImage: React.FC<ButtonKvImageProps> = ({
 	onPress,
 	style,
 	children,
+	disabled,
 }) => {
 	const scaleValue = useRef(new Animated.Value(1)).current;
 	const [currentBg, setCurrentBg] = useState<string>("transparent");
