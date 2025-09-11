@@ -2,42 +2,54 @@
 
 #### v 0.20.0
 
-## Context Prompt for AI
-
-### App Architecture
+## Overview
 
 The app is built using React Native and Expo and TypeScript. It uses a "classic" navigation approach with Stack Navigator. The entry point to the app is the index.tsx file but the App.tsx file is the main app component.
+
+The /docs directory contains documentation for the app and the /kyber-vision-mobile-18-ref directory contains the previous version of the app that will be the basis for the new TypeScript version of the app. There will be some key changes to naming conventions and file organization.
 
 ### Folder Structure
 
 ```
-src/
-  app/
-    index.tsx        ← entry point, root Stack.Navigator
-    App.tsx          ← main app component
-    user/            ← user-related screens
-      SplashScreen.tsx
-      LoginScreen.tsx
-      RegisterScreen.tsx
-      HomeScreen.tsx
-    scripting/
-      ScriptingLive.tsx
-      ScriptingSelectSession.tsx
-    review/
-      ReviewVideo.tsx
-      ReviewSelection.tsx
-    admin/
-      AdminSettings.tsx
-      AdminUserCard.tsx
-    utilities/
-      UploadVideoScreen.tsx
-  assets/
-  reducers/
-    review.ts
-    script.ts
-    sync.ts
-    team.ts
-    upload.ts
-    user.ts
-  types/
+.
+├── app.json
+├── docs
+│   ├── DATABASE_SCHEMA_OVERVIEW.md
+│   ├── DOCS_OVERVIEW.md
+│   └── kyber-vision-mobile-18-ref
+├── eslint.config.js
+├── expo-env.d.ts
+├── metro.config.js
+├── package-lock.json
+├── package.json
+├── README.md
+├── src
+│   ├── app
+│   │   ├── App.tsx # main app component, root Stack.Navigator
+│   │   ├── index.tsx # entry point
+│   │   ├── user-admin
+│   │   └── welcome
+│   │       ├── Login.tsx
+│   │       └── Splash.tsx
+│   ├── assets
+│   │   ├── expo-assets
+│   │   │   ├── adaptive-icon.png
+│   │   │   ├── favicon.png
+│   │   │   ├── icon.png
+│   │   │   └── splash-icon.png
+│   │   └── images
+│   │       ├── multi-use
+│   │       ├── screen-frame
+│   │       ├── scripting
+│   │       ├── user-admin
+│   │       └── welcome
+│   ├── components
+│   │   ├── buttons
+│   │   │   └── ButtonKvImage.tsx
+│   │   └── screen-frames
+│   │       └── ScreenFrame.tsx
+│   └── types
+│       ├── navigation.ts
+│       └── svg.d.ts
+└── tsconfig.json
 ```
