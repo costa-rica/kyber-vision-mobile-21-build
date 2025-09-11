@@ -30,3 +30,6 @@ docs
 - reducers will be in the src/reducers directory
 - types will be in the src/types directory
 - The kyber-vision-mobile-18 app used "TemplateView" and the name for the component that was used that the framing of the screens in the app. The kyber-vision-mobile-20 app will use "ScreenFrame" for this purpose. There will also be variations to the ScreenFrame component for different use cases. Such as potentaillly "ScreenFrameWithTopChildren".
+- API routes renamed (routes are all plural)
+  - KyberVision18API used `/contract-player-user/` , but KyberVision20API uses `/contract-player-users/`
+  - KyberVision18API used `/contract-team-user/` , but KyberVision20API uses `/contract-team-users/`
