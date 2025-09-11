@@ -9,6 +9,7 @@ export type RootStackParamList = {
   CreateTeam: undefined;
   Home: undefined;
   ScriptingLiveSelectSession: undefined;
+  ScriptingLiveSelectPlayers: undefined;
 };
 
 export type RootStackNavigation = NativeStackNavigationProp<RootStackParamList>;
@@ -33,3 +34,5 @@ export type SelectTeamScreenProps = NativeStackScreenProps<RootStackParamList, '
 export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export type ScriptingLiveSelectSessionScreenProps = NativeStackScreenProps<RootStackParamList, 'ScriptingLiveSelectSession'>;
+
+export type ScriptingLiveSelectPlayersScreenProps = NativeStackScreenProps<RootStackParamList, 'ScriptingLiveSelectPlayers'>;

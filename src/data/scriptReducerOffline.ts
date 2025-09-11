@@ -106,4 +106,4 @@ export const scriptReducerOffline = {
       shirtNumber: 18
     }
   ]
-} as const;
+};

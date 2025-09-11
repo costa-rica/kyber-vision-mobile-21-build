@@ -440,7 +440,7 @@ type safety, better user experience, and modern React patterns. All TypeScript c
 integrates seamlessly with the existing authentication and navigation flow, serving as the main hub for the
 application's core features.
 
-## Implemented ScriptingLiveSelectSession.tsx (commit )
+## Implemented ScriptingLiveSelectSession.tsx (commit 8f237fb424586f200548f6862e3090bf4a915570 )
 
 ### Implementation Summary
 
@@ -489,3 +489,61 @@ application's core features.
 
 The implementation maintains full compatibility with the existing codebase and passes TypeScript compilation. The
 app starts successfully and all navigation flows are properly connected.
+
+## Implemented ScriptingLiveSelectPlayers.tsx (commit )
+
+ScriptingLiveSelectPlayers Implementation Summary
+
+1. ScriptingLiveSelectPlayers Screen (src/app/scripting/ScriptingLiveSelectPlayers.tsx)
+
+- Complete TypeScript conversion of the reference JavaScript file
+- Player List Display: FlatList showing all team players with shirt numbers and names
+- Player Selection: Touch to select/deselect players with visual feedback (gray background when selected)
+- API Integration: Fetches players from server or uses offline data for guest users
+- Warning System: Shows warning triangle and message when user tries to proceed without selecting a player
+- Responsive Design: Proper styling matching the original layout with team branding colors
+
+2. Key Features Implemented
+
+- Player Data Management: Integration with script reducer for player state
+- Offline Support: Uses scriptReducerOffline data for guest users
+- Visual Feedback: Selected players show gray background, inactive button shows muted colors
+- Error Handling: Proper API error handling with user-friendly alerts
+- Navigation Flow: Ready for next screen (ScriptingLive) when implemented
+
+3. Navigation Integration
+
+- Added to navigation types: ScriptingLiveSelectPlayers route added to RootStackParamList
+- Updated App.tsx: Screen added to stack navigator
+- Connected flow: ScriptingLiveSelectSession now navigates to ScriptingLiveSelectPlayers
+
+4. TypeScript Enhancements
+
+- Proper interfaces: PlayerTableButtonProps with complete player typing
+- Type-safe Redux: All dispatches and selectors properly typed
+- Navigation typing: Screen props properly typed with navigation parameter
+- Component typing: React.FC used for internal components
+
+5. Visual Design Elements
+
+- Team logo integration: Tribe SVG displayed in player table heading
+- Warning triangle: SVG warning icon for validation messages
+- Player cards: Rounded cards with shirt numbers in colored circles
+- Active/inactive states: Button appearance changes based on selection state
+
+6. Data Flow
+
+- Player fetching: API call or offline data based on user authentication
+- State management: Players stored in script reducer with position properties
+- Selection logic: Single player selection with Redux state updates
+- Validation: Prevents proceeding without player selection
+
+Navigation Flow Now Complete:
+
+1. Home → "Scripting" button
+2. ScriptingLiveSelectSession → Select session → Navigate to players
+3. ScriptingLiveSelectPlayers → Select player → Ready for ScriptingLive
+
+The implementation maintains full compatibility with the existing codebase, passes all TypeScript checks, and the
+app starts successfully. The scripting flow is now ready for the next step: implementing the ScriptingLive screen
+for actual gameplay scripting.

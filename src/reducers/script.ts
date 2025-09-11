@@ -37,6 +37,7 @@ export interface Player {
   lastName: string;
   shirtNumber: number;
   positionArea?: number | null;
+  selected?: boolean;
 }
 
 export interface ScriptingPlayerObject {

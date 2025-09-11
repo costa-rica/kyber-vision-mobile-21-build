@@ -109,10 +109,7 @@ export default function ScriptingLiveSelectSession({
       return { ...item, selected: false };
     });
     dispatch(updateSessionsArray(tempArray));
-    
-    // TODO: Navigate to ScriptingLiveSelectPlayers when implemented
-    Alert.alert("Coming Soon", "ScriptingLiveSelectPlayers screen will be implemented next");
-    // navigation.navigate("ScriptingLiveSelectPlayers");
+    navigation.navigate("ScriptingLiveSelectPlayers");
   };
 
   return (
