@@ -1,10 +1,10 @@
 # Documentation Overview
 
-This file serves as the entry point for all documentation located in the `docs/` directory. Use it to navigate and understand the structure and contents of the documentation resources for this project.
+This file serves as the entry point for all documentation located in the `docs` directory. Use it to navigate and understand the structure and contents of the documentation resources for this project.
 
 ## Legacy JavaScript Files
 
-The `kyber-vision-mobile-18-ref/` directory contains JavaScript files, assets, and key configuration files from the previous project version. These files are intended to be converted into TypeScript for the current codebase.
+The `docs/kyber-vision-mobile-18-ref` directory contains JavaScript files, assets, and key configuration files from the previous project version. These files are intended to be converted into TypeScript for the current codebase.
 
 ## Additional Documentation
 
