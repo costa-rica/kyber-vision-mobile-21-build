@@ -13,12 +13,16 @@ export interface SessionAction {
   dateScripted: string;
   timestamp: number;
   type: string;
-  subtype: string;
+  subtype: string | null;
   quality: string;
   playerId: string;
   scriptId: number | null;
   newAction: boolean;
   pointId: string;
+  zone?: number;
+  favorite?: boolean;
+  scoreTeamAnalyzed?: number;
+  scoreTeamOther?: number;
 }
 
 export interface SessionPoint {

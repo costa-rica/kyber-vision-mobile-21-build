@@ -10,6 +10,7 @@ export type RootStackParamList = {
   Home: undefined;
   ScriptingLiveSelectSession: undefined;
   ScriptingLiveSelectPlayers: undefined;
+  ScriptingLive: undefined;
 };
 
 export type RootStackNavigation = NativeStackNavigationProp<RootStackParamList>;

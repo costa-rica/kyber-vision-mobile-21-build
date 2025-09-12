@@ -157,12 +157,12 @@ export default function ScriptingLiveSelectPlayers({
 		);
 
 		if (selectedPlayers.length > 0) {
-			// TODO: Navigate to ScriptingLive when implemented
-			Alert.alert(
-				"Coming Soon",
-				"ScriptingLive screen will be implemented next"
-			);
-			// navigation.navigate("ScriptingLive");
+			// // TODO: Navigate to ScriptingLive when implemented
+			// Alert.alert(
+			// 	"Coming Soon",
+			// 	"ScriptingLive screen will be implemented next"
+			// );
+			navigation.navigate("ScriptingLive");
 		} else {
 			setDisplayWarning(true);
 		}
