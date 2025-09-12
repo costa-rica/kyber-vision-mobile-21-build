@@ -2,7 +2,13 @@ import { StyleSheet, Text, View, Alert, ViewStyle } from "react-native";
 import TemplateViewWithTopChildrenSmall from "../../components/screen-frames/TemplateViewWithTopChildrenSmall";
 import ScriptingLivePortrait from "../../components/scripting/ScriptingLivePortrait";
 import ScriptingLiveLandscape from "../../components/scripting/ScriptingLiveLandscape";
-import { Gesture } from "react-native-gesture-handler";
+import {
+	Gesture,
+	GestureStateChangeEvent,
+	GestureUpdateEvent,
+	TapGestureHandlerEventPayload,
+	PanGestureHandlerEventPayload,
+} from "react-native-gesture-handler";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,6 +24,7 @@ import SwipePad from "../../components/swipe-pads/SwipePad";
 import { useMemo } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types/navigation";
+import { runOnJS } from "react-native-reanimated";
 
 type ScriptingLiveProps = NativeStackScreenProps<
 	RootStackParamList,
@@ -211,7 +218,9 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	const [numTrianglesOuter, setNumTrianglesOuter] = useState(12);
 
 	// Gesture Stuff
-	const gestureTapBegin = Gesture.Tap().onBegin((event) => {
+	const handleTapBeginDetected = (
+		event: GestureStateChangeEvent<TapGestureHandlerEventPayload>
+	) => {
 		console.log("gestureTapBegin");
 
 		// Stop if match already won (best of 5 → first to 3)
@@ -285,17 +294,36 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 				}
 			}
 		}
+	};
+
+	const gestureTapBegin = Gesture.Tap().onBegin((event) => {
+		runOnJS(handleTapBeginDetected)(event);
 	});
+	const handleTapEndDetected = (
+		event: GestureStateChangeEvent<TapGestureHandlerEventPayload>
+	) => {
+		console.log("gestureTapEnd");
+		setPadVisible(false);
+		setTapIsActive(true);
+	};
 
 	const gestureTapEnd = Gesture.Tap()
-		.maxDuration(10000)
-		.onEnd((event) => {
-			console.log("gestureTapEnd");
-			setPadVisible(false);
-			setTapIsActive(true);
+		.maxDuration(10000) // <-- basically if user keeps hold for more than 10 seconds the wheel will just stay there.
+		.onEnd((event: GestureStateChangeEvent<TapGestureHandlerEventPayload>) => {
+			runOnJS(handleTapEndDetected)(event);
 		});
 
-	const gestureSwipeOnChange = Gesture.Pan().onChange((event) => {
+	// const gestureTapEnd = Gesture.Tap()
+	// 	.maxDuration(10000)
+	// 	.onEnd((event) => {
+	// 		console.log("gestureTapEnd");
+	// 		setPadVisible(false);
+	// 		setTapIsActive(true);
+	// 	});
+
+	const handleSwipeOnChange = (
+		event: GestureUpdateEvent<PanGestureHandlerEventPayload>
+	) => {
 		const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
 		let swipePosX: number;
@@ -338,6 +366,9 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 				inMiddleCircle
 			);
 		}
+	};
+	const gestureSwipeOnChange = Gesture.Pan().onChange((event) => {
+		runOnJS(handleSwipeOnChange)(event);
 	});
 
 	const lastActionTypeIndexRef = useRef<number | null>(null);
@@ -345,7 +376,10 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	const lastActionPositionIndexRef = useRef<number | null>(null);
 
 	// Combine swipe and tap gestures
-	const gestureSwipeOnEnd = Gesture.Pan().onEnd((event) => {
+
+	const handleSwipeOnEnd = (
+		event: GestureUpdateEvent<PanGestureHandlerEventPayload>
+	) => {
 		const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
 		const swipePosX = x - userReducer.circleRadiusOuter;
@@ -472,8 +506,10 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 		} else {
 			console.log(" no action registered on this swipe ");
 		}
+	};
+	const gestureSwipeOnEnd = Gesture.Pan().onEnd((event) => {
+		runOnJS(handleSwipeOnEnd)(event);
 	});
-
 	const combinedGestures = Gesture.Simultaneous(
 		gestureTapBegin,
 		gestureTapEnd,
