@@ -698,6 +698,11 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 			newAction: true,
 			pointId: `${Date.now()}`,
 			area: lastActionAreaIndexRef.current,
+			// Missing properties:
+			// setNumber: scriptReducer.currentSetNumber,
+			setNumber: matchSetsWon.teamAnalyzed + matchSetsWon.teamOpponent + 1,
+			scoreTeamAnalyzed: setScores.teamAnalyzed,
+			scoreTeamOther: setScores.teamOpponent,
 		};
 
 		let tempArray = [...scriptReducer.sessionActionsArray, newActionObj];
@@ -957,6 +962,9 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 					newAction: true,
 					pointId: `${Date.now()}`,
 					area: lastActionAreaIndexRef.current,
+					setNumber: matchSetsWon.teamAnalyzed + matchSetsWon.teamOpponent + 1,
+					scoreTeamAnalyzed: setScores.teamAnalyzed,
+					scoreTeamOther: setScores.teamOpponent,
 				};
 
 				updatedArray = [...updatedArray, setStartAction];

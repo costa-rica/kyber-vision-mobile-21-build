@@ -22,8 +22,9 @@ export interface SessionAction {
 	// zone?: number;
 	area: number;
 	favorite?: boolean;
-	scoreTeamAnalyzed?: number;
-	scoreTeamOther?: number;
+	scoreTeamAnalyzed: number;
+	scoreTeamOther: number;
+	setNumber: number;
 }
 
 export interface SessionPoint {
