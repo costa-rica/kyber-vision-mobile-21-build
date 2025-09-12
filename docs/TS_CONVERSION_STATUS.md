@@ -548,7 +548,7 @@ The implementation maintains full compatibility with the existing codebase, pass
 app starts successfully. The scripting flow is now ready for the next step: implementing the ScriptingLive screen
 for actual gameplay scripting.
 
-## Implemented SwipePad.tsx (commit)
+## Implemented SwipePad.tsx (commit 761fe76c1953c03a7717315899d9cad10eedbc9f)
 
 Key TypeScript improvements:
 
@@ -570,7 +570,7 @@ Component structure preserved:
 The component is now fully typed and ready for use in the TypeScript version of your
 Kyber Vision Mobile app at src/components/swipe-pads/SwipePad.tsx.
 
-## Implemented ScriptingLive.tsx (commit)
+## Implemented ScriptingLive.tsx (commit f1b8155cae789fcce37af702340b31fcbcfc3513)
 
 Created Files:
 

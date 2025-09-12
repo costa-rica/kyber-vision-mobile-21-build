@@ -8,7 +8,7 @@ import {
 	Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import TemplateViewWithTopChildrenSmall from "../../components/screen-frames/TemplateViewWithTopChildrenSmall";
+import ScreenFrameWithTopChildrenSmall from "../../components/screen-frames/ScreenFrameWithTopChildrenSmall";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../types/store";
 import ButtonKvNoDefaultTextOnly from "../../components/buttons/ButtonKvNoDefaultTextOnly";
@@ -177,7 +177,7 @@ export default function ScriptingLiveSelectPlayers({
 	};
 
 	return (
-		<TemplateViewWithTopChildrenSmall
+		<ScreenFrameWithTopChildrenSmall
 			navigation={navigation}
 			topChildren={topChildren}
 			sizeOfLogo={0}
@@ -233,7 +233,7 @@ export default function ScriptingLiveSelectPlayers({
 					</View>
 				</View>
 			</View>
-		</TemplateViewWithTopChildrenSmall>
+		</ScreenFrameWithTopChildrenSmall>
 	);
 }
 

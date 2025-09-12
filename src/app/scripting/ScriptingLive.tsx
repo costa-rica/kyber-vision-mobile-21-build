@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Alert, ViewStyle } from "react-native";
-import TemplateViewWithTopChildrenSmall from "../../components/screen-frames/TemplateViewWithTopChildrenSmall";
+import ScreenFrameWithTopChildrenSmall from "../../components/screen-frames/ScreenFrameWithTopChildrenSmall";
 import ScriptingLivePortrait from "../../components/scripting/ScriptingLivePortrait";
 import ScriptingLiveLandscape from "../../components/scripting/ScriptingLiveLandscape";
 import {
@@ -1090,7 +1090,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	};
 
 	return orientation == "portrait" ? (
-		<TemplateViewWithTopChildrenSmall
+		<ScreenFrameWithTopChildrenSmall
 			navigation={navigation}
 			topChildren={topChildren}
 			topHeight="10%"
@@ -1139,7 +1139,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 				lastActionIsFavorite={lastActionIsFavorite()}
 			/>
 			{renderSwipePad()}
-		</TemplateViewWithTopChildrenSmall>
+		</ScreenFrameWithTopChildrenSmall>
 	) : (
 		<View style={{ flex: 1 }}>
 			<ScriptingLiveLandscape
