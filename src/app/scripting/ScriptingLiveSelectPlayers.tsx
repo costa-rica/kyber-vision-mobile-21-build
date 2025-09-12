@@ -19,6 +19,7 @@ import {
 	updatePlayersArray,
 	createPlayerArrayPositionProperties,
 } from "../../reducers/script";
+import { reducerSetUserSwipePadWheel } from "../../reducers/user";
 import { scriptReducerOffline } from "../../data/scriptReducerOffline";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../types/navigation";
@@ -117,6 +118,13 @@ export default function ScriptingLiveSelectPlayers({
 		} else {
 			fetchPlayers();
 		}
+		dispatch(
+			reducerSetUserSwipePadWheel({
+				circleRadiusOuter: 60,
+				circleRadiusMiddle: 40,
+				circleRadiusInner: 20,
+			})
+		);
 	}, []);
 
 	const PlayerTableButton: React.FC<PlayerTableButtonProps> = ({ player }) => {
