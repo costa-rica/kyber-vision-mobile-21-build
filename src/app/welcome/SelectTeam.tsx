@@ -238,13 +238,18 @@ export default function SelectTeam({ navigation }: SelectTeamScreenProps) {
 							}}
 						>
 							{/* TODO: Add proper link icon */}
-							<Text>📋</Text>
+							<Image
+								source={require("../../assets/images/welcome/iconLink.png")}
+								resizeMode="contain"
+								// style={styles.imgIconForLink}
+							/>
 						</ButtonKvNoDefault>
 
 						<View style={styles.vwInputWithLabel}>
 							<View style={styles.vwInputWithLabelForUnderline}>
 								<TextInput
 									placeholder="paste invite code here"
+									placeholderTextColor="#806181"
 									style={styles.txtInputInvite}
 									value={inviteCode}
 									onChangeText={setInviteCode}
@@ -290,14 +295,16 @@ const styles = StyleSheet.create({
 	// Top
 	containerTop: {
 		alignItems: "center",
-		justifyContent: "center",
-		padding: 20,
+		// justifyContent: "center",
+		paddingHorizontal: 10,
 		flex: 1,
+		// backgroundColor: "blue",
+		height: "100%",
 	},
 	vwInputGroup: {
 		width: "90%",
 		alignItems: "center",
-		paddingTop: 30,
+		paddingTop: 10,
 	},
 	// FlatList
 	flatListTeamNames: {
@@ -307,7 +314,8 @@ const styles = StyleSheet.create({
 		borderStyle: "solid",
 		borderRadius: 10,
 		padding: 5,
-		marginTop: 20,
+		// marginTop: 20,
+		minHeight: 100,
 	},
 	vwTeamRow: {
 		padding: 15,
@@ -340,6 +348,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		paddingBottom: Dimensions.get("window").height * 0.075,
+		// backgroundColor: "green",
 	},
 	btnTribe: {
 		width: Dimensions.get("window").width * 0.6,
@@ -355,7 +364,7 @@ const styles = StyleSheet.create({
 	},
 	vwInputAndButton: {
 		width: "100%",
-		gap: 10,
+		// gap: 10,
 		marginTop: 30,
 		alignItems: "center",
 		flexDirection: "row",
