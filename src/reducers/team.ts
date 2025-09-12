@@ -24,6 +24,7 @@ interface TeamDetails {
 	teamName: string;
 	city?: string;
 	coachName?: string;
+	description?: string;
 	// Add other properties as needed
 }
 
@@ -57,7 +58,10 @@ export const teamSlice = createSlice({
 		updatePlayersArray: (state, action: PayloadAction<Player[]>) => {
 			state.playersArray = action.payload;
 		},
-		updateSelectedPlayerObject: (state, action: PayloadAction<Player | null>) => {
+		updateSelectedPlayerObject: (
+			state,
+			action: PayloadAction<Player | null>
+		) => {
 			state.selectedPlayerObject = action.payload;
 		},
 		updateTeamDetails: (state, action: PayloadAction<TeamDetails | null>) => {

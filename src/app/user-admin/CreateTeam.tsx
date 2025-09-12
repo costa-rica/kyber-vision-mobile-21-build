@@ -130,6 +130,10 @@ export default function CreateTeam({ navigation }: CreateTeamProps) {
 			// name: "Add Player",
 		});
 
+		console.log("--- updatedArray ---");
+		console.log(JSON.stringify(updatedArray));
+		console.log("---------------------");
+
 		dispatch(updatePlayersArray(updatedArray));
 		setIsVisibleModalTeamAddPlayer(false);
 	};
@@ -182,6 +186,8 @@ export default function CreateTeam({ navigation }: CreateTeamProps) {
 			let tempArray = [...teamReducer.teamsArray];
 			tempArray.push(resJson.teamNew);
 			dispatch(updateTeamsArray(tempArray));
+			dispatch(updatePlayersArray([]));
+			dispatch(updateTeamDetails(null));
 			Alert.alert("Team created successfully", "", [
 				{
 					text: "OK",
