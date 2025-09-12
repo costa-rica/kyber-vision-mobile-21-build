@@ -197,11 +197,12 @@ export default function SelectTeam({ navigation }: SelectTeamScreenProps) {
 						<ButtonKvNoDefaultTextOnly
 							onPress={() => {
 								// TODO: Implement CreateTeamScreen
-								console.log("Create team - not implemented yet");
-								Alert.alert(
-									"Coming Soon",
-									"Create team feature will be implemented soon."
-								);
+								// console.log("Create team - not implemented yet");
+								// Alert.alert(
+								// 	"Coming Soon",
+								// 	"Create team feature will be implemented soon."
+								// );
+								navigation.navigate("CreateTeam");
 							}}
 							styleView={styles.btnTribe}
 							styleText={styles.btnTribeText}

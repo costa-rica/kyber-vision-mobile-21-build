@@ -11,6 +11,7 @@ import Home from "./welcome/Home";
 import ScriptingLiveSelectSession from "./scripting/ScriptingLiveSelectSession";
 import ScriptingLiveSelectPlayers from "./scripting/ScriptingLiveSelectPlayers";
 import ScriptingLive from "./scripting/ScriptingLive";
+import CreateTeam from "./user-admin/CreateTeam";
 
 import type { RootStackParamList } from "../types/navigation";
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -40,6 +41,7 @@ const Index = () => {
 							component={ScriptingLiveSelectPlayers}
 						/>
 						<Stack.Screen name="ScriptingLive" component={ScriptingLive} />
+						<Stack.Screen name="CreateTeam" component={CreateTeam} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</PersistGate>
