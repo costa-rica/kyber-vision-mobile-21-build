@@ -211,4 +211,4 @@ export const {
 export default userSlice.reducer;
 
 // Export types for use in components
-export type { UserState, ContractTeamUser, LoginUserPayload, SetScreenDimensionsPayload, SetUserSwipePadWheelPayload };
+export type { UserState, ContractTeamUser, LoginUserPayload, SetScreenDimensionsPayload, SetUserSwipePadWheelPayload, WheelColors };
