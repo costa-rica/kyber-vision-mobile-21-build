@@ -428,7 +428,7 @@ export default function ScriptingLivePortrait(
 							>
 								{scriptReducer.sessionActionsArray[
 									scriptReducer.sessionActionsArray.length - 1
-								]?.zone || "?"}
+								]?.area || "?"}
 							</ButtonKvNoDefaultTextOnly>
 							<ButtonKvNoDefaultTextOnly
 								onPress={() => {
@@ -688,7 +688,7 @@ export default function ScriptingLivePortrait(
 								style={stylesVwPlayerSuperSpacer}
 								onLayout={handleOnLayoutPlayerSuperSpacer}
 							/>
-							<View style={stylesVwPlayerPositionArea1}>
+							{/* <View style={stylesVwPlayerPositionArea1}>
 								<Text>Area 1</Text>
 								<Text>
 									{
@@ -707,7 +707,7 @@ export default function ScriptingLivePortrait(
 										)?.firstName
 									}
 								</Text>
-							</View>
+							</View> */}
 							<SvgVolleyballCourt />
 						</View>
 					</GestureDetector>
@@ -809,7 +809,7 @@ export default function ScriptingLivePortrait(
 				<Text>Player positions</Text>
 				<ScrollView style={{ height: 150 }}>
 					<Text>
-						{JSON.stringify(scriptReducer.playerObjectPositionalArray, null, 2)}
+						{JSON.stringify(scriptReducer.sessionActionsArray, null, 2)}
 					</Text>
 				</ScrollView>
 			</View>

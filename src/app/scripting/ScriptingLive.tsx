@@ -313,14 +313,6 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 			runOnJS(handleTapEndDetected)(event);
 		});
 
-	// const gestureTapEnd = Gesture.Tap()
-	// 	.maxDuration(10000)
-	// 	.onEnd((event) => {
-	// 		console.log("gestureTapEnd");
-	// 		setPadVisible(false);
-	// 		setTapIsActive(true);
-	// 	});
-
 	const handleSwipeOnChange = (
 		event: GestureUpdateEvent<PanGestureHandlerEventPayload>
 	) => {
@@ -373,7 +365,8 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 
 	const lastActionTypeIndexRef = useRef<number | null>(null);
 	const lastActionQualityIndexRef = useRef<number | null>(null);
-	const lastActionPositionIndexRef = useRef<number | null>(null);
+	// const lastActionPositionIndexRef = useRef<number | null>(null);
+	const lastActionAreaIndexRef = useRef<number | null>(null);
 
 	// Combine swipe and tap gestures
 
@@ -414,28 +407,32 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 						tapXAdjusted >
 						scriptReducer.coordsScriptLivePortraitContainerMiddle.width! * 0.66
 					) {
-						lastActionPositionIndexRef.current = 1;
+						// lastActionPositionIndexRef.current = 1;
+						lastActionAreaIndexRef.current = 1;
 					} else if (
 						tapXAdjusted >
 						scriptReducer.coordsScriptLivePortraitContainerMiddle.width! * 0.33
 					) {
-						lastActionPositionIndexRef.current = 6;
+						// lastActionPositionIndexRef.current = 6;
+						lastActionAreaIndexRef.current = 6;
 					} else {
-						lastActionPositionIndexRef.current = 5;
+						lastActionAreaIndexRef.current = 5;
 					}
 				} else {
 					if (
 						tapXAdjusted >
 						scriptReducer.coordsScriptLivePortraitContainerMiddle.width! * 0.66
 					) {
-						lastActionPositionIndexRef.current = 2;
+						// lastActionPositionIndexRef.current = 2;
+						lastActionAreaIndexRef.current = 2;
 					} else if (
 						tapXAdjusted >
 						scriptReducer.coordsScriptLivePortraitContainerMiddle.width! * 0.33
 					) {
-						lastActionPositionIndexRef.current = 3;
+						// lastActionPositionIndexRef.current = 3;
+						lastActionAreaIndexRef.current = 3;
 					} else {
-						lastActionPositionIndexRef.current = 4;
+						lastActionAreaIndexRef.current = 4;
 					}
 				}
 			} else {
@@ -461,7 +458,8 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 								.width! *
 								0.66
 					) {
-						lastActionPositionIndexRef.current = 1;
+						// lastActionPositionIndexRef.current = 1;
+						lastActionAreaIndexRef.current = 1;
 					} else if (
 						tapXAdjusted >
 						scriptReducer.coordsScriptLiveLandscapeContainerLeft.width! +
@@ -469,9 +467,10 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 								.width! *
 								0.33
 					) {
-						lastActionPositionIndexRef.current = 6;
+						// lastActionPositionIndexRef.current = 6;
+						lastActionAreaIndexRef.current = 6;
 					} else {
-						lastActionPositionIndexRef.current = 5;
+						lastActionAreaIndexRef.current = 5;
 					}
 				} else {
 					// Landscape Front Row
@@ -482,7 +481,8 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 								.width! *
 								0.66
 					) {
-						lastActionPositionIndexRef.current = 2;
+						// lastActionPositionIndexRef.current = 2;
+						lastActionAreaIndexRef.current = 2;
 					} else if (
 						tapXAdjusted >
 						scriptReducer.coordsScriptLiveLandscapeContainerLeft.width! +
@@ -490,9 +490,10 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 								.width! *
 								0.33
 					) {
-						lastActionPositionIndexRef.current = 3;
+						// lastActionPositionIndexRef.current = 3;
+						lastActionAreaIndexRef.current = 3;
 					} else {
-						lastActionPositionIndexRef.current = 4;
+						lastActionAreaIndexRef.current = 4;
 					}
 				}
 			}
@@ -500,8 +501,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 				scriptReducer.typesArray[lastActionTypeIndexRef.current!],
 				scriptReducer.qualityArrayOuterCircle[
 					lastActionQualityIndexRef.current!
-				],
-				lastActionPositionIndexRef.current!
+				]
 			);
 		} else {
 			console.log(" no action registered on this swipe ");
@@ -679,9 +679,14 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 
 	const addNewActionToScriptReducersActionsArray = (
 		type: string,
-		quality: string,
-		position: number
+		quality: string
 	) => {
+		if (lastActionAreaIndexRef.current === null) {
+			alert(
+				"lastActionAreaIndexRef is null (addNewActionToScriptReducersActionsArray function) -- problem in ScriptingLivePortrait.tsx -> report to Nick"
+			);
+			return;
+		}
 		const newActionObj: SessionAction = {
 			dateScripted: new Date().toISOString(),
 			timestamp: Date.now(),
@@ -692,6 +697,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 			scriptId: null,
 			newAction: true,
 			pointId: `${Date.now()}`,
+			area: lastActionAreaIndexRef.current,
 		};
 
 		let tempArray = [...scriptReducer.sessionActionsArray, newActionObj];
@@ -933,6 +939,13 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 				const nextSetNumber = currentSetNumber + 1;
 				const nowIso = new Date().toISOString();
 
+				if (lastActionAreaIndexRef.current === null) {
+					alert(
+						"lastActionAreaIndexRef is null -- problem in ScriptingLivePortrait.tsx -> report to Nick"
+					);
+					return;
+				}
+
 				const setStartAction: SessionAction = {
 					dateScripted: nowIso,
 					timestamp: Date.now(),
@@ -943,6 +956,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 					scriptId: null,
 					newAction: true,
 					pointId: `${Date.now()}`,
+					area: lastActionAreaIndexRef.current,
 				};
 
 				updatedArray = [...updatedArray, setStartAction];
