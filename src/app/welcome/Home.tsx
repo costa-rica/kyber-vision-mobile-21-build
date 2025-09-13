@@ -17,6 +17,7 @@ import type { RootState } from "../../types/store";
 import { updateTeamsArray } from "../../reducers/team";
 import { logoutUser } from "../../reducers/user";
 import type { Team } from "../../reducers/team";
+import { updateSessionsArray } from "../../reducers/script";
 
 export default function Home({ navigation }: HomeScreenProps) {
 	const userReducer = useSelector((state: RootState) => state.user);
@@ -123,7 +124,7 @@ export default function Home({ navigation }: HomeScreenProps) {
 					selected: false,
 				}));
 				// TODO: Implement script reducer and updateSessionsArray action
-				// dispatch(updateSessionsArray(tempArray));
+				dispatch(updateSessionsArray(tempArray));
 				setSessionsArray(tempArray);
 			}
 		} catch (error) {
