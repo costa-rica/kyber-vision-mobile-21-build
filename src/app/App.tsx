@@ -12,6 +12,7 @@ import ScriptingLiveSelectSession from "./scripting/ScriptingLiveSelectSession";
 import ScriptingLiveSelectPlayers from "./scripting/ScriptingLiveSelectPlayers";
 import ScriptingLive from "./scripting/ScriptingLive";
 import CreateTeam from "./user-admin/CreateTeam";
+import UploadVideo from "./review/UploadVideo";
 
 import type { RootStackParamList } from "../types/navigation";
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -42,6 +43,7 @@ const Index = () => {
 						/>
 						<Stack.Screen name="ScriptingLive" component={ScriptingLive} />
 						<Stack.Screen name="CreateTeam" component={CreateTeam} />
+						<Stack.Screen name="UploadVideo" component={UploadVideo} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</PersistGate>

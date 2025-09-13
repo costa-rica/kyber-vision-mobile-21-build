@@ -623,7 +623,7 @@ The TypeScript implementation includes:
 All components follow the existing codebase patterns and use the established component architecture
 (ScreenFrameWithTopChildrenSmall, ButtonKvStd, etc.).
 
-## Implemented ReviewSelection.tsx (commit )
+## Implemented ReviewSelection.tsx (commit b33b3c7cc64c593a9448ae0442c33ff1295d87e5 )
 
 Components Created:
 
@@ -663,3 +663,65 @@ Key Features:
 
 The implementation follows the existing codebase patterns and maintains compatibility with the original JavaScript functionality
 while adding TypeScript type safety.
+
+## Implemented ReviewVideo.tsx (commit )
+
+Components Created:
+
+1. Upload Reducer (src/reducers/upload.ts):
+
+- Complete TypeScript interfaces for video selection, loading states, and delete operations
+- Redux slice with actions for managing video upload state
+- Proper typing for all state and actions including SelectedVideoObject and DeleteVideoObject
+
+2. Modal Components:
+
+ModalUploadVideo (src/components/modals/ModalUploadVideo.tsx):
+
+- Session selection interface for linking videos to specific sessions
+- Displays selected video details and session information
+- Upload functionality with proper error handling
+
+ModalUploadVideoYesNo (src/components/modals/ModalUploadVideoYesNo.tsx):
+
+- Confirmation modal for video deletion
+- Shows video details before deletion
+- Safe null checking for all video properties
+
+3. Navigation Types Updated:
+
+- Added UploadVideo route to the navigation stack
+- Added corresponding screen props type
+
+4. Store Updated:
+
+- Integrated the upload reducer into the Redux store
+
+5. UploadVideo Screen (src/app/review/UploadVideo.tsx):
+
+- Team Selection Dropdown: Interactive dropdown to select different teams
+- Video Selection: Uses expo-image-picker to select multiple videos from device gallery
+- Video Upload: Complete upload functionality with FormData and progress handling
+- Video Management: List of selected videos with upload capability
+- User Videos List: Expandable bottom section showing uploaded videos with delete functionality
+- API Integration: Fetches user videos and handles upload/delete operations
+- Error Handling: Comprehensive error handling for all operations
+- TypeScript Safety: Full type coverage for all props, state, and API responses
+
+6. Package Installation:
+
+- Installed expo-image-picker package for video selection functionality
+
+Key Features:
+
+- Multi-Video Selection: Select multiple videos from device gallery
+- Session Linking: Link videos to specific practice/game sessions
+- Upload Progress: Loading states and progress indicators
+- Video Management: View and delete uploaded videos
+- Permission Handling: Proper media library permissions
+- Expandable UI: Collapsible bottom section for better UX
+- TypeScript Safety: Complete type safety throughout the component tree
+- Redux Integration: Proper state management for all upload operations
+
+The implementation follows the existing codebase patterns and maintains full compatibility with the original JavaScript
+functionality while adding comprehensive TypeScript type safety and modern React patterns.

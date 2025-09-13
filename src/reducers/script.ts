@@ -7,6 +7,7 @@ export interface Session {
 	sessionName: string;
 	city: string;
 	selected: boolean;
+	sessionDateString?: string;
 }
 
 export interface SessionAction {

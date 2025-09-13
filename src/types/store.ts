@@ -6,6 +6,7 @@ import user from "../reducers/user";
 import team from "../reducers/team";
 import script from "../reducers/script";
 import review from "../reducers/review";
+import upload from "../reducers/upload";
 
 // Persist config for user only
 const userPersistConfig = {
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   team, // not persisted
   script, // not persisted
   review, // not persisted
+  upload, // not persisted
   // Add other reducers here as needed
 });
 

@@ -170,9 +170,7 @@ export default function Home({ navigation }: HomeScreenProps) {
 							Review
 						</ButtonKvStd>
 						<ButtonKvNoDefaultTextOnly
-							onPress={() =>
-								handleNavigationWithTodo("UploadVideoScreen", "Upload Video")
-							}
+							onPress={() => navigation.navigate("UploadVideo")}
 							styleView={styles.btnHomeNavigationUploadVideo}
 							styleText={styles.txtHomeNavigationUploadVideo}
 						>
