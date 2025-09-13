@@ -176,12 +176,7 @@ export default function Home({ navigation }: HomeScreenProps) {
 							Upload Video
 						</ButtonKvNoDefaultTextOnly>
 						<ButtonKvNoDefaultTextOnly
-							onPress={() =>
-								handleNavigationWithTodo(
-									"ScriptingSyncVideoSelection",
-									"Sync Video"
-								)
-							}
+							onPress={() => navigation.navigate("ScriptingSyncVideoSelection")}
 							styleView={styles.btnHomeNavigationUploadVideo}
 							styleText={styles.txtHomeNavigationUploadVideo}
 						>

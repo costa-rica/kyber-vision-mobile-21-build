@@ -14,6 +14,8 @@ export type RootStackParamList = {
   ReviewSelection: undefined;
   ReviewVideo: undefined;
   UploadVideo: undefined;
+  ScriptingSyncVideoSelection: undefined;
+  ScriptingSyncVideo: undefined;
 };
 
 export type RootStackNavigation = NativeStackNavigationProp<RootStackParamList>;
@@ -46,3 +48,7 @@ export type ReviewSelectionScreenProps = NativeStackScreenProps<RootStackParamLi
 export type ReviewVideoScreenProps = NativeStackScreenProps<RootStackParamList, 'ReviewVideo'>;
 
 export type UploadVideoScreenProps = NativeStackScreenProps<RootStackParamList, 'UploadVideo'>;
+
+export type ScriptingSyncVideoSelectionScreenProps = NativeStackScreenProps<RootStackParamList, 'ScriptingSyncVideoSelection'>;
+
+export type ScriptingSyncVideoScreenProps = NativeStackScreenProps<RootStackParamList, 'ScriptingSyncVideo'>;

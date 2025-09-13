@@ -15,6 +15,7 @@ import CreateTeam from "./user-admin/CreateTeam";
 import UploadVideo from "./review/UploadVideo";
 import ReviewSelection from "./review/ReviewSelection";
 import ReviewVideo from "./review/ReviewVideo";
+import ScriptingSyncVideoSelection from "./review/ScriptingSyncVideoSelection";
 
 import type { RootStackParamList } from "../types/navigation";
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -48,6 +49,10 @@ const Index = () => {
 						<Stack.Screen name="UploadVideo" component={UploadVideo} />
 						<Stack.Screen name="ReviewSelection" component={ReviewSelection} />
 						<Stack.Screen name="ReviewVideo" component={ReviewVideo} />
+						<Stack.Screen
+							name="ScriptingSyncVideoSelection"
+							component={ScriptingSyncVideoSelection}
+						/>
 					</Stack.Navigator>
 				</NavigationContainer>
 			</PersistGate>
