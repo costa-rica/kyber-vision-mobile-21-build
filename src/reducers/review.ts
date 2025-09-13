@@ -62,15 +62,21 @@ export interface PlayerDbObject {
 }
 
 export interface ReviewState {
-	videoObject: VideoObject | null;
-	actionsArray: ReviewAction[];
-	playerDbObjectsArray: PlayerDbObject[];
+	reviewReducerVideoObject: VideoObject | null;
+	reviewReducerActionsArray: ReviewAction[];
+	reviewReducerListOfPlayerDbObjects: PlayerDbObject[];
+	isFavoriteToggle: boolean;
+	selectedActionObject: ReviewAction | null;
+	selectedVideoObjectTimeEnd: number | null;
 }
 
 const initialState: ReviewState = {
-	videoObject: null,
-	actionsArray: [],
-	playerDbObjectsArray: [],
+	reviewReducerVideoObject: null,
+	reviewReducerActionsArray: [],
+	reviewReducerListOfPlayerDbObjects: [],
+	isFavoriteToggle: false,
+	selectedActionObject: null,
+	selectedVideoObjectTimeEnd: null,
 };
 
 export const reviewSlice = createSlice({
@@ -81,24 +87,164 @@ export const reviewSlice = createSlice({
 			state,
 			action: PayloadAction<VideoObject>
 		) => {
-			state.videoObject = action.payload;
+			state.reviewReducerVideoObject = action.payload;
+			console.log(`- dans Redux: updateReviewReducerVideoObject 🔔`);
 		},
 		createReviewActionsArray: (
 			state,
 			action: PayloadAction<ReviewAction[]>
 		) => {
-			state.actionsArray = action.payload;
+			state.reviewReducerActionsArray = action.payload;
 		},
 		createReviewActionsArrayUniquePlayersNamesAndObjects: (
 			state,
 			action: PayloadAction<{ playerDbObjectsArray: PlayerDbObject[] }>
 		) => {
-			state.playerDbObjectsArray = action.payload.playerDbObjectsArray;
+			state.reviewReducerListOfPlayerDbObjects = action.payload.playerDbObjectsArray;
 		},
+
+		updateReviewReducerIsPlayingForActionsArrayV6: (
+			state,
+			action: PayloadAction<number>
+		) => {
+			const currentTime = action.payload;
+
+			const allowNewActionBool = (action: ReviewAction) => {
+				if (action.timestamp >= currentTime - 1) {
+					if (action.timestamp <= currentTime + 2) {
+						return true;
+					}
+				} else {
+					return false;
+				}
+			};
+
+			state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+				(action) => {
+					if (allowNewActionBool(action)) {
+						return { ...action, isPlaying: true };
+					} else {
+						return { ...action, isPlaying: false };
+					}
+				}
+			);
+		},
+
+		pressedActionInReviewReducerActionArray: (
+			state,
+			action: PayloadAction<ReviewAction>
+		) => {
+			state.selectedActionObject = action.payload;
+			const updateActionIsPlaying = {
+				...action.payload,
+				isPlaying: true,
+			};
+
+			state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+				(action) => ({
+					...action,
+					isPlaying:
+						action.isDisplayed &&
+						action.reviewVideoActionsArrayIndex ===
+							updateActionIsPlaying.reviewVideoActionsArrayIndex,
+				})
+			);
+		},
+
+		filterReviewReducerActionsArrayOnPlayer: (
+			state,
+			action: PayloadAction<PlayerDbObject>
+		) => {
+			const playerId = action.payload.id;
+
+			const player = state.reviewReducerListOfPlayerDbObjects.find(
+				(p) => p.id === playerId
+			);
+			if (player) {
+				player.isDisplayed = !player.isDisplayed;
+			}
+
+			state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+				(action) => {
+					if (state.isFavoriteToggle) {
+						return action.playerId === playerId && action.isFavorite
+							? { ...action, isDisplayed: !action.isDisplayed }
+							: action;
+					} else {
+						return action.playerId === playerId
+							? { ...action, isDisplayed: !action.isDisplayed }
+							: action;
+					}
+				}
+			);
+		},
+
+		toggleReviewReducerActionIsFavorite: (
+			state,
+			action: PayloadAction<number>
+		) => {
+			const actionsDbTableId = action.payload;
+
+			state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+				(item) =>
+					item.actionsDbTableId === actionsDbTableId
+						? { ...item, isFavorite: !item.isFavorite }
+						: item
+			);
+		},
+
+		filterReviewReducerActionsArrayOnIsFavorite: (state) => {
+			state.isFavoriteToggle = !state.isFavoriteToggle;
+
+			state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+				(actionItem) => {
+					const matchingPlayer = state.reviewReducerListOfPlayerDbObjects.find(
+						(player) => player.id === actionItem.playerId
+					);
+
+					if (!matchingPlayer) {
+						return actionItem;
+					}
+
+					if (state.isFavoriteToggle) {
+						return {
+							...actionItem,
+							isDisplayed: actionItem.isFavorite
+								? matchingPlayer.isDisplayed
+								: false,
+						};
+					}
+
+					return {
+						...actionItem,
+						isDisplayed: matchingPlayer.isDisplayed,
+					};
+				}
+			);
+		},
+
+		filterReviewReducerActionsArrayShowAll: (state) => {
+			state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+				(action) => ({
+					...action,
+					isDisplayed: true,
+				})
+			);
+			state.isFavoriteToggle = false;
+			state.reviewReducerListOfPlayerDbObjects =
+				state.reviewReducerListOfPlayerDbObjects.map((player) => ({
+					...player,
+					isDisplayed: true,
+				}));
+		},
+
 		clearReviewReducer: (state) => {
-			state.videoObject = null;
-			state.actionsArray = [];
-			state.playerDbObjectsArray = [];
+			state.reviewReducerVideoObject = null;
+			state.reviewReducerActionsArray = [];
+			state.reviewReducerListOfPlayerDbObjects = [];
+			state.isFavoriteToggle = false;
+			state.selectedActionObject = null;
+			state.selectedVideoObjectTimeEnd = null;
 		},
 	},
 });
@@ -107,6 +253,12 @@ export const {
 	updateReviewReducerVideoObject,
 	createReviewActionsArray,
 	createReviewActionsArrayUniquePlayersNamesAndObjects,
+	filterReviewReducerActionsArrayOnPlayer,
+	toggleReviewReducerActionIsFavorite,
+	filterReviewReducerActionsArrayOnIsFavorite,
+	filterReviewReducerActionsArrayShowAll,
+	pressedActionInReviewReducerActionArray,
+	updateReviewReducerIsPlayingForActionsArrayV6,
 	clearReviewReducer,
 } = reviewSlice.actions;
 
