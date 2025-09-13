@@ -87,7 +87,7 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 				>
 					{item.isFavorite && (
 						<Image
-							source={require("../../assets/images/reviewVideoFavoriteStarYellowInterior.png")}
+							source={require("../../assets/images/review/reviewVideoFavoriteStarYellowInterior.png")}
 							resizeMode="contain"
 							style={styles.imgIsFavorite}
 						/>
@@ -107,7 +107,7 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 					}
 				>
 					<Image
-						source={require("../../assets/images/btnReviewVideoFavoriteStar.png")}
+						source={require("../../assets/images/review/btnReviewVideoFavoriteStar.png")}
 						resizeMode="contain"
 						style={styles.imgBtnFavorite}
 					/>
@@ -118,7 +118,7 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 				>
 					{item.isFavorite && (
 						<Image
-							source={require("../../assets/images/reviewVideoFavoriteStarYellowInterior.png")}
+							source={require("../../assets/images/review/reviewVideoFavoriteStarYellowInterior.png")}
 							resizeMode="contain"
 							style={styles.imgIsFavorite}
 						/>
@@ -192,7 +192,7 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 					}}
 				>
 					<Image
-						source={require("../../assets/images/navigationAndSmall/btnBackArrowWhite.png")}
+						source={require("../../assets/images/multi-use/btnBackArrowWhite.png")}
 						resizeMode="contain"
 					/>
 				</TouchableOpacity>
@@ -203,7 +203,7 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 					style={stylesTouchOpSetTopAndRightIsVisible}
 				>
 					<Image
-						source={require("../../assets/images/btnReviewVideoSideTab.png")}
+						source={require("../../assets/images/review/btnReviewVideoSideTab.png")}
 						resizeMode="contain"
 						style={{}}
 					/>
@@ -217,7 +217,7 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 							style={styles.containerTopRightSideTabClose}
 						>
 							<Image
-								source={require("../../assets/images/btnReviewVideoSideTabClose.png")}
+								source={require("../../assets/images/review/btnReviewVideoSideTabClose.png")}
 								resizeMode="contain"
 								style={{}}
 							/>
@@ -242,7 +242,7 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 																{playerDbObject.firstName.substring(0, 3)}
 															</Text>
 															<Image
-																source={require("../../assets/images/whiteX.png")}
+																source={require("../../assets/images/multi-use/whiteX.png")}
 																resizeMode="contain"
 																style={{
 																	width: 15,
@@ -261,7 +261,7 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 											onPress={() => setDropdownVisible(!isDropdownVisible)}
 										>
 											<Image
-												source={require("../../assets/images/buttons/btnReviewVideoPlayersDownArrow.png")}
+												source={require("../../assets/images/review/btnReviewVideoPlayersDownArrow.png")}
 												resizeMode="contain"
 												style={{
 													transform: [
@@ -300,7 +300,7 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 							style={styles.touchOpMiddleRight}
 						>
 							<Image
-								source={require("../../assets/images/buttons/btnShareDiagram.png")}
+								source={require("../../assets/images/review/btnShareDiagram.png")}
 								resizeMode="contain"
 								style={{ width: 30, height: 30 }}
 							/>
@@ -349,8 +349,8 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 							<Image
 								source={
 									props.playing
-										? require("../../assets/images/buttons/btnPause.png")
-										: require("../../assets/images/buttons/btnPlay.png")
+										? require("../../assets/images/multi-use/btnPause.png")
+										: require("../../assets/images/multi-use/btnPlay.png")
 								}
 								alt="logo"
 								resizeMode="contain"

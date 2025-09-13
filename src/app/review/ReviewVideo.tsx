@@ -82,6 +82,7 @@ export default function ReviewVideo({ navigation }: Props) {
 	};
 
 	const togglePlaying = () => {
+		console.log("--> play button fired !!");
 		setPlaying((prev) => !prev);
 	};
 
@@ -254,4 +255,3 @@ export default function ReviewVideo({ navigation }: Props) {
 		/>
 	);
 }
-

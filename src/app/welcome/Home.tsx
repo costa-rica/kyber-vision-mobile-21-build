@@ -163,9 +163,7 @@ export default function Home({ navigation }: HomeScreenProps) {
 							Scripting
 						</ButtonKvStd>
 						<ButtonKvStd
-							onPress={() =>
-								handleNavigationWithTodo("ReviewSelectionScreen", "Review")
-							}
+							onPress={() => navigation.navigate("ReviewSelection")}
 							style={styles.btnHomeNavigation}
 						>
 							Review
