@@ -129,7 +129,7 @@ export default function ScriptingSyncVideo({ navigation }: Props) {
 		if (state === "playing" && playerRef.current) {
 			playerRef.current.getDuration().then((dur: number) => {
 				setDuration(dur);
-				console.log("duration: ", dur);
+				// console.log("duration: ", dur);
 			});
 		}
 	};

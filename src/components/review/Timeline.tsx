@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Dimensions, LayoutChangeEvent } from "react-native";
-import { GestureDetector, Gesture } from "react-native-gesture-handler";
+import {
+	Gesture,
+	GestureStateChangeEvent,
+	GestureUpdateEvent,
+	TapGestureHandlerEventPayload,
+	PanGestureHandlerEventPayload,
+	GestureDetector,
+} from "react-native-gesture-handler";
+import { runOnJS } from "react-native-reanimated";
 
 interface TimelineProps {
 	timelineWidth?: number;
@@ -24,7 +32,9 @@ export default function Timeline({
 	duration,
 	onSeek,
 }: TimelineProps) {
-	const [timelineLayout, setTimelineLayout] = useState<TimelineLayout | null>(null);
+	const [timelineLayout, setTimelineLayout] = useState<TimelineLayout | null>(
+		null
+	);
 
 	const calculateTimelineLength = (event: LayoutChangeEvent) => {
 		const { x, y, width, height } = event.nativeEvent.layout;
@@ -39,24 +49,36 @@ export default function Timeline({
 		if (onSeek) onSeek(newTime);
 	};
 
-	const gestureTapTimeline = Gesture.Tap().onEnd((event) => {
+	const handleTapEndDetected = (
+		event: GestureStateChangeEvent<TapGestureHandlerEventPayload>
+	) => {
 		if (!timelineLayout) return;
 		const newProgress = Math.min(
 			Math.max(event.x / timelineLayout.width, 0),
 			1
 		);
-		console.log("- newProgress: ", newProgress);
+		// console.log("- newProgress: ", newProgress);
 		handleTimelineNewPosition(newProgress);
+	};
+	const gestureTapTimeline = Gesture.Tap().onEnd((event) => {
+		runOnJS(handleTapEndDetected)(event);
 	});
 
-	const gestureSwipeTimeline = Gesture.Pan().onUpdate((event) => {
+	const handleSwipeOnChange = (
+		event: GestureUpdateEvent<PanGestureHandlerEventPayload>
+	) => {
 		if (!timelineLayout) return;
 		const newProgress = Math.min(
 			Math.max(event.x / timelineLayout.width, 0),
 			1
 		);
 		handleTimelineNewPosition(newProgress);
-	});
+	};
+	const gestureSwipeTimeline = Gesture.Pan().onUpdate(
+		(event: GestureUpdateEvent<PanGestureHandlerEventPayload>) => {
+			runOnJS(handleSwipeOnChange)(event);
+		}
+	);
 
 	const combinedTimelineGesture = Gesture.Race(
 		gestureTapTimeline,
