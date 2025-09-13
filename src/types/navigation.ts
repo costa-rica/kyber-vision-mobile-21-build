@@ -11,6 +11,8 @@ export type RootStackParamList = {
   ScriptingLiveSelectSession: undefined;
   ScriptingLiveSelectPlayers: undefined;
   ScriptingLive: undefined;
+  ReviewSelection: undefined;
+  ReviewVideo: undefined;
 };
 
 export type RootStackNavigation = NativeStackNavigationProp<RootStackParamList>;
@@ -37,3 +39,7 @@ export type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>
 export type ScriptingLiveSelectSessionScreenProps = NativeStackScreenProps<RootStackParamList, 'ScriptingLiveSelectSession'>;
 
 export type ScriptingLiveSelectPlayersScreenProps = NativeStackScreenProps<RootStackParamList, 'ScriptingLiveSelectPlayers'>;
+
+export type ReviewSelectionScreenProps = NativeStackScreenProps<RootStackParamList, 'ReviewSelection'>;
+
+export type ReviewVideoScreenProps = NativeStackScreenProps<RootStackParamList, 'ReviewVideo'>;

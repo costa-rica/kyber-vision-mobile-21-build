@@ -22,7 +22,7 @@ interface TemplateViewWithTopChildrenSmallProps {
 	navigation?: any;
 	topChildren?: ReactNode;
 	sizeOfLogo?: number;
-	topHeight?: string;
+	topHeight?: string | number;
 	screenName?: string;
 	modalComponentAndSetterObject?: ModalComponentAndSetterObject;
 	onBackPress?: () => Promise<boolean> | boolean;

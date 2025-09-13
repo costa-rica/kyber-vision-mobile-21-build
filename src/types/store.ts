@@ -5,6 +5,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import user from "../reducers/user";
 import team from "../reducers/team";
 import script from "../reducers/script";
+import review from "../reducers/review";
 
 // Persist config for user only
 const userPersistConfig = {
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, user), // persisted
   team, // not persisted
   script, // not persisted
+  review, // not persisted
   // Add other reducers here as needed
 });
 
