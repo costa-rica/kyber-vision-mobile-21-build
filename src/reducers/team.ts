@@ -6,8 +6,10 @@ interface Player {
 	firstName: string;
 	lastName: string;
 	shirtNumber: number;
-	birthDate: string;
+	birthDate?: string;
 	selected: boolean;
+	position?: string;
+	positionAbbreviation?: string;
 }
 
 interface Team {
@@ -17,6 +19,9 @@ interface Team {
 	coachName: string;
 	practiceMatch: string | null;
 	selected: boolean;
+	genericJoinToken?: string;
+	visibility?: string;
+	description?: string;
 }
 
 interface TeamDetails {
@@ -32,7 +37,10 @@ interface SquadMember {
 	id: number;
 	userId: number;
 	teamId: number;
-	// Add other properties as needed
+	username?: string;
+	isPlayer?: boolean;
+	isCoach?: boolean;
+	isAdmin?: boolean;
 }
 
 interface TeamState {

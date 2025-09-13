@@ -16,6 +16,9 @@ export type RootStackParamList = {
   UploadVideo: undefined;
   ScriptingSyncVideoSelection: undefined;
   ScriptingSyncVideo: undefined;
+  AdminSettings: undefined;
+  AdminSettingsPlayerCard: { playerObject: any };
+  AdminSettingsUserCard: { userObject: any };
 };
 
 export type RootStackNavigation = NativeStackNavigationProp<RootStackParamList>;
@@ -52,3 +55,5 @@ export type UploadVideoScreenProps = NativeStackScreenProps<RootStackParamList, 
 export type ScriptingSyncVideoSelectionScreenProps = NativeStackScreenProps<RootStackParamList, 'ScriptingSyncVideoSelection'>;
 
 export type ScriptingSyncVideoScreenProps = NativeStackScreenProps<RootStackParamList, 'ScriptingSyncVideo'>;
+
+export type AdminSettingsScreenProps = NativeStackScreenProps<RootStackParamList, 'AdminSettings'>;

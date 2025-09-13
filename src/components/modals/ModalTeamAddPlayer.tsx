@@ -12,6 +12,7 @@ import ButtonKvNoDefaultTextOnly from "../buttons/ButtonKvNoDefaultTextOnly";
 import { useState } from "react";
 
 interface PlayerObject {
+	id?: number;
 	firstName: string;
 	lastName: string;
 	shirtNumber: string | null;

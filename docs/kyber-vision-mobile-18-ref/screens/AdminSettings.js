@@ -22,10 +22,7 @@ import { updateTeamsArray } from "../reducers/team";
 
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
-// import ModalUploadVideo from "./subcomponents/modals/ModalUploadVideo";
-// import ModalUploadVideoYesNo from "./subcomponents/modals/ModalUploadVideoYesNo";
 import ModalAddPlayer from "./subcomponents/modals/ModalTeamAddPlayer";
-import ModalAdminSettingsDeletePlayerYesNo from "./subcomponents/modals/ModalAdminSettingsDeletePlayerYesNo";
 import {
 	updateSelectedPlayerObject,
 	updateSquadMembersArray,

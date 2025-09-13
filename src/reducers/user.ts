@@ -11,6 +11,7 @@ interface ContractTeamUser {
   id: string;
   teamId: string;
   userId: string;
+  isAdmin?: boolean;
   // Add other properties as needed
 }
 

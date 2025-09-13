@@ -794,9 +794,10 @@ The implementation closely follows the v18 reference while properly converting t
 
 The implementation closely follows the v18 reference while properly converting to TypeScript with strict typing. The screen is ready for use and connects to the existing navigation flow from the Home screen.
 
-## Implemented ScriptingSyncVideo.tsx (commit )
+## Implemented ScriptingSyncVideo.tsx (commit 028074f17c2878b4dd25f444f8f1f72d119382f9)
 
 **Created ScriptingSyncVideo screen** (`src/app/review/ScriptingSyncVideo.tsx`) - main screen that handles:
+
 - YouTube video playback with synchronized scripting actions
 - Script selection and management for delta time synchronization
 - Real-time video timeline scrubbing with gesture support
@@ -805,6 +806,7 @@ The implementation closely follows the v18 reference while properly converting t
 - Current time and duration display
 
 **Added TypeScript interfaces** for script data structures:
+
 - `ScriptAction` interface for individual scripted actions
 - `ScriptData` interface for complete script objects with timing information
 - Proper typing for API responses and component props
@@ -814,6 +816,7 @@ The implementation closely follows the v18 reference while properly converting t
 **Connected navigation flow** - ScriptingSyncVideoSelection now properly navigates to ScriptingSyncVideo
 
 **Key Features Implemented:**
+
 - Complete TypeScript conversion from JavaScript reference
 - YouTube video player integration with imperative controls
 - Script listing with selection functionality (single selection)
@@ -825,6 +828,7 @@ The implementation closely follows the v18 reference while properly converting t
 - Proper state management with React hooks
 
 **Video Synchronization Functionality:**
+
 - Fetches scripts linked to selected video session
 - Displays script details including action count and current delta time
 - Allows selection of individual scripts for synchronization
@@ -834,3 +838,67 @@ The implementation closely follows the v18 reference while properly converting t
 **Verified implementation** with TypeScript type checking - all types pass without errors
 
 The implementation closely follows the v18 reference while properly converting to TypeScript with strict typing. The screen enables users to synchronize scripted volleyball actions with video timestamps for accurate playback timing.
+
+## Implemented AdminSettings (commit )
+
+**AdminSettings.tsx** (`src/app/user-admin/AdminSettings.tsx`) - main admin settings screen for team management:
+
+- Complete TypeScript conversion from `docs/kyber-vision-mobile-18-ref/screens/AdminSettings.js`
+- Team information display with name, description, and visibility settings
+- Interactive visibility dropdown with options: Public, On invitation, Private
+- Team roster management with player list, search functionality, and add/remove capabilities
+- Squad members management with user list and invitation system
+- Long press functionality for deleting players and squad members
+- Navigation to AdminSettingsPlayerCard and AdminSettingsUserCard screens
+- API integration for all CRUD operations (players, squad members, team visibility)
+- Modal integration with ModalTeamAddPlayer and ModalAdminSettingsInviteToSquad
+- Admin permission checking to show/hide management features
+- Error handling with user-friendly alerts and try-catch blocks
+
+**Enhanced Type Definitions:**
+
+- **Player interface** updated in team reducer to include:
+  - Added optional `position` and `positionAbbreviation` properties
+  - Made `birthDate` optional for better compatibility
+- **Team interface** enhanced with:
+  - Added `visibility` and `description` properties
+  - Maintained `genericJoinToken` for invitation functionality
+- **SquadMember interface** expanded with:
+  - Added `username`, `isPlayer`, `isCoach`, and `isAdmin` properties
+- **ContractTeamUser interface** updated with `isAdmin` property for permission checking
+
+**Navigation Integration:**
+
+- Added AdminSettings, AdminSettingsPlayerCard, and AdminSettingsUserCard routes to navigation types
+- Created AdminSettingsScreenProps type for proper navigation typing
+- Updated RootStackParamList with new routes and parameter objects
+
+**Modal Components Integration:**
+
+- **ModalTeamAddPlayer.tsx** - modal component for adding new players to teams
+- **ModalAdminSettingsInviteToSquad.tsx** - modal component for inviting users to teams
+- Both components include proper form validation, error handling, and TypeScript interfaces
+- Integration with existing Redux state management and Clipboard API
+
+**API Integration:**
+
+- Fetch players: `GET /players/team/{teamId}`
+- Fetch squad members: `GET /contract-team-users/{teamId}` (updated to plural route)
+- Update team visibility: `POST /teams/update-visibility`
+- Add player to team: `POST /teams/add-player`
+- Remove player: `DELETE /teams/player`
+- Invite to squad: `POST /contract-team-users/add-squad-member` (updated to plural route)
+- Remove squad member: `DELETE /contract-team-users/` (updated to plural route)
+
+**Key Features:**
+
+- Complete admin functionality for team management
+- Permission-based UI (only admins see management features)
+- Responsive design with proper styling and layout
+- FlatList implementation for efficient rendering
+- Real-time data fetching with useFocusEffect hook
+- Type-safe Redux integration with proper error handling
+- Visual feedback for all user interactions
+- Confirmation dialogs for destructive actions
+
+**Verified implementation** with TypeScript type checking - all types pass without errors. The AdminSettings screen provides complete team management functionality matching the original JavaScript version while leveraging TypeScript's benefits for better code quality and developer experience.
