@@ -36,7 +36,7 @@ export default function ScreenFrameWithTopChildren({
 }: ScreenFrameWithTopChildrenProps) {
 	// Note: uploadReducer not implemented yet, so commenting out for now
 	// const uploadReducer = useSelector((state: RootState) => state.upload);
-	
+
 	const handleBackPress = async () => {
 		const goBack = onBackPress();
 		if (goBack) {
@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		height: "35%",
-		overflow: "hidden",
 	},
 	btnBack: {
 		position: "absolute",
