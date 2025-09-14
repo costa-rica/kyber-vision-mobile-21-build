@@ -10,16 +10,17 @@ import {
 import ButtonKvStd from "../buttons/ButtonKvStd";
 import ButtonKvNoDefaultTextOnly from "../buttons/ButtonKvNoDefaultTextOnly";
 import { useState } from "react";
+import { PlayerObject } from "../../types/user-admin";
 
-interface PlayerObject {
-	id?: number;
-	firstName: string;
-	lastName: string;
-	shirtNumber: string | null;
-	position: string;
-	positionAbbreviation: string;
-	name?: string;
-}
+// interface PlayerObject {
+// 	id?: number;
+// 	firstName: string;
+// 	lastName: string;
+// 	shirtNumber: string | null;
+// 	position: string;
+// 	positionAbbreviation: string;
+// 	name?: string;
+// }
 
 interface PositionItem {
 	position: string;

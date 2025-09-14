@@ -22,12 +22,14 @@ import {
 	Team,
 	SquadMember,
 } from "../../reducers/team";
+
 import ButtonKvNoDefault from "../../components/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "../../components/buttons/ButtonKvNoDefaultTextOnly";
 import ModalTeamAddPlayer from "../../components/modals/ModalTeamAddPlayer";
 import ModalAdminSettingsInviteToSquad from "../../components/modals/ModalAdminSettingsInviteToSquad";
 import { RootState } from "../../types/store";
 import { AdminSettingsScreenProps } from "../../types/navigation";
+import { PlayerObject } from "../../types/user-admin";
 
 interface ModalComponentAndSetterObject {
 	modalComponent: React.ReactElement;
@@ -35,15 +37,19 @@ interface ModalComponentAndSetterObject {
 	useStateSetter: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function AdminSettings({ navigation }: AdminSettingsScreenProps) {
+export default function AdminSettings({
+	navigation,
+}: AdminSettingsScreenProps) {
 	const userReducer = useSelector((state: RootState) => state.user);
 	const teamReducer = useSelector((state: RootState) => state.team);
 	const [showVisibilityOptions, setShowVisibilityOptions] = useState(false);
 	const dispatch = useDispatch();
 	const [playersArray, setPlayersArray] = useState<Player[]>([]);
 	const [isVisibleModalAddPlayer, setIsVisibleModalAddPlayer] = useState(false);
-	const [isVisibleRemovePlayerModal, setIsVisibleRemovePlayerModal] = useState(false);
-	const [isVisibleInviteToSquadModal, setIsVisibleInviteToSquadModal] = useState(false);
+	const [isVisibleRemovePlayerModal, setIsVisibleRemovePlayerModal] =
+		useState(false);
+	const [isVisibleInviteToSquadModal, setIsVisibleInviteToSquadModal] =
+		useState(false);
 
 	// Triggers whenever the screen is focused
 	useFocusEffect(
@@ -53,22 +59,26 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 		}, [])
 	);
 
-	const isAdminOfThisTeam = userReducer.contractTeamUserArray.filter(
-		(team) =>
-			team.teamId ===
-			teamReducer.teamsArray.filter((team) => team.selected)[0]?.id.toString()
-	)[0]?.isAdmin;
+	// const isAdminOfThisTeam = userReducer.contractTeamUserArray.filter(
+	// 	(team) =>
+	// 		team.teamId ===
+	// 		teamReducer.teamsArray.filter((team) => team.selected)[0]?.id.toString()
+	// )[0]?.isAdmin;
 
-	const selectedTeam = teamReducer.teamsArray.filter((team) => team.selected)[0];
-
-	const topChildren = (
-		<Text>
-			{selectedTeam?.teamName} Settings
-		</Text>
-	);
+	const selectedTeam = teamReducer.teamsArray.filter(
+		(team) => team.selected
+	)[0];
+	const selectedTeamId = teamReducer.teamsArray.find((t) => t.selected)?.id;
+	const isAdminOfThisTeam =
+		userReducer.contractTeamUserArray.find(
+			(ctu) => Number(ctu.teamId) === Number(selectedTeamId)
+		)?.isAdmin ?? false;
+	const topChildren = <Text>{selectedTeam?.teamName} Settings</Text>;
 
 	const fetchPlayers = async (): Promise<void> => {
-		const selectedTeamId = teamReducer.teamsArray.find((tribe) => tribe.selected)?.id;
+		const selectedTeamId = teamReducer.teamsArray.find(
+			(tribe) => tribe.selected
+		)?.id;
 		if (!selectedTeamId) return;
 
 		try {
@@ -108,7 +118,9 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 	};
 
 	const fetchSquadMembers = async (): Promise<void> => {
-		const selectedTeamId = teamReducer.teamsArray.find((tribe) => tribe.selected)?.id;
+		const selectedTeamId = teamReducer.teamsArray.find(
+			(tribe) => tribe.selected
+		)?.id;
 		if (!selectedTeamId) return;
 
 		try {
@@ -145,7 +157,9 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 	};
 
 	const updateTeamVisibility = async (visibility: string): Promise<void> => {
-		const selectedTeamId = teamReducer.teamsArray.filter((team) => team.selected)[0]?.id;
+		const selectedTeamId = teamReducer.teamsArray.filter(
+			(team) => team.selected
+		)[0]?.id;
 		if (!selectedTeamId) return;
 
 		try {
@@ -199,7 +213,9 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 	const whichModalToDisplay = (): ModalComponentAndSetterObject | undefined => {
 		if (isVisibleModalAddPlayer) {
 			return {
-				modalComponent: <ModalTeamAddPlayer addPlayerToTeam={addPlayerToTeam} />,
+				modalComponent: (
+					<ModalTeamAddPlayer addPlayerToTeam={addPlayerToTeam} />
+				),
 				useState: isVisibleModalAddPlayer,
 				useStateSetter: setIsVisibleModalAddPlayer,
 			};
@@ -216,8 +232,10 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 		}
 	};
 
-	const addPlayerToTeam = async (playerObject: Player): Promise<void> => {
-		const selectedTeamId = teamReducer.teamsArray.filter((team) => team.selected)[0]?.id;
+	const addPlayerToTeam = async (playerObject: PlayerObject): Promise<void> => {
+		const selectedTeamId = teamReducer.teamsArray.filter(
+			(team) => team.selected
+		)[0]?.id;
 		if (!selectedTeamId) return;
 
 		try {
@@ -265,7 +283,9 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 	const handleRemovePlayer = async (playerObject: Player): Promise<void> => {
 		console.log("--- removed Player ----");
 		console.log(JSON.stringify(playerObject));
-		const selectedTeamId = teamReducer.teamsArray.filter((team) => team.selected)[0]?.id;
+		const selectedTeamId = teamReducer.teamsArray.filter(
+			(team) => team.selected
+		)[0]?.id;
 		if (!selectedTeamId) return;
 
 		try {
@@ -311,7 +331,9 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 
 	const handleInviteToSquad = async (emailString: string): Promise<void> => {
 		console.log("----> handleInviteToSquad");
-		const selectedTeamId = teamReducer.teamsArray.filter((team) => team.selected)[0]?.id;
+		const selectedTeamId = teamReducer.teamsArray.filter(
+			(team) => team.selected
+		)[0]?.id;
 		if (!selectedTeamId) return;
 
 		try {
@@ -384,7 +406,9 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 		);
 	};
 
-	const confirmDeleteSquadMember = (contractTeamUserObject: SquadMember): void => {
+	const confirmDeleteSquadMember = (
+		contractTeamUserObject: SquadMember
+	): void => {
 		Alert.alert(
 			"Are you sure?",
 			`you want to delete ${contractTeamUserObject.username} (user id: ${contractTeamUserObject.userId}) from the squad?`,
@@ -400,7 +424,9 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 		);
 	};
 
-	const handleRemoveSquadMember = async (contractTeamUserObject: SquadMember): Promise<void> => {
+	const handleRemoveSquadMember = async (
+		contractTeamUserObject: SquadMember
+	): Promise<void> => {
 		try {
 			const bodyObj = {
 				contractTeamUserId: contractTeamUserObject.id,
@@ -457,9 +483,7 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 			delayLongPress={500}
 		>
 			<View style={styles.vwPlayerShirtNumber}>
-				<Text style={styles.txtPlayerShirtNumber}>
-					{item.shirtNumber}
-				</Text>
+				<Text style={styles.txtPlayerShirtNumber}>{item.shirtNumber}</Text>
 			</View>
 			<View style={styles.vwPlayerName}>
 				<Text style={styles.txtPlayerName}>
@@ -488,22 +512,16 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 			style={styles.vwSquadMembersRow}
 		>
 			<View style={styles.vwSquadMembersUserName}>
-				<Text style={styles.txtSquadMembersUserName}>
-					{item?.username}
-				</Text>
+				<Text style={styles.txtSquadMembersUserName}>{item?.username}</Text>
 			</View>
 			{item?.isPlayer && (
 				<View style={styles.vwSquadMembersPlayer}>
-					<Text style={styles.txtSquadMembersPlayer}>
-						Player
-					</Text>
+					<Text style={styles.txtSquadMembersPlayer}>Player</Text>
 				</View>
 			)}
 			{item?.isCoach && (
 				<View style={styles.vwSquadMembersPlayer}>
-					<Text style={styles.txtSquadMembersPlayer}>
-						Coach
-					</Text>
+					<Text style={styles.txtSquadMembersPlayer}>Coach</Text>
 				</View>
 			)}
 			{item?.isAdmin && (
@@ -590,8 +608,7 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 											{ type: "Private", value: "No one can join" },
 										]
 											.filter(
-												(option) =>
-													option.type !== selectedTeam?.visibility
+												(option) => option.type !== selectedTeam?.visibility
 											)
 											.map((option) => (
 												<TouchableOpacity
@@ -681,7 +698,8 @@ export default function AdminSettings({ navigation }: AdminSettingsScreenProps) 
 									<ButtonKvNoDefaultTextOnly
 										onPress={() => {
 											console.log("Add");
-											if (isAdminOfThisTeam) setIsVisibleInviteToSquadModal(true);
+											if (isAdminOfThisTeam)
+												setIsVisibleInviteToSquadModal(true);
 										}}
 										styleView={styles.btnAddElement}
 										styleText={styles.txtBtnAddElement}

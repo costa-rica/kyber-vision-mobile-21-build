@@ -183,9 +183,7 @@ export default function Home({ navigation }: HomeScreenProps) {
 							Sync Video
 						</ButtonKvNoDefaultTextOnly>
 						<ButtonKvNoDefaultTextOnly
-							onPress={() =>
-								handleNavigationWithTodo("AdminSettings", "Admin Settings")
-							}
+							onPress={() => navigation.navigate("AdminSettings")}
 							styleView={styles.btnHomeNavigationUploadVideo}
 							styleText={styles.txtHomeNavigationUploadVideo}
 						>

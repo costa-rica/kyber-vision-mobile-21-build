@@ -866,6 +866,7 @@ The implementation closely follows the v18 reference while properly converting t
 - **SquadMember interface** expanded with:
   - Added `username`, `isPlayer`, `isCoach`, and `isAdmin` properties
 - **ContractTeamUser interface** updated with `isAdmin` property for permission checking
+- created src/types/user-admin.ts for PlayerObject interface
 
 **Navigation Integration:**
 
