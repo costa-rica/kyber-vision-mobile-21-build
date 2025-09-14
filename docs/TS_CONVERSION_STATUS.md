@@ -966,7 +966,7 @@ The implementation closely follows the v18 reference while properly converting t
 
 **Verified implementation** with TypeScript type checking - all types pass without errors. The AdminSettingsPlayerCard screen provides complete player profile functionality matching the original JavaScript version while leveraging TypeScript's benefits for better code quality and developer experience.
 
-## Implemented AdminSettingsUserCard (commit )
+## Implemented AdminSettingsUserCard (commit 1d38aa77c8c1c56164ef633d4e95cbcc54cfd2d3)
 
 **AdminSettingsUserCard.tsx** (`src/app/user-admin/AdminSettingsUserCard.tsx`) - user detail screen for squad member management:
 
