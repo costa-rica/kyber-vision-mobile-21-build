@@ -1,5 +1,5 @@
 import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { Player } from '../reducers/team';
+import type { Player, SquadMember } from '../reducers/team';
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -19,7 +19,7 @@ export type RootStackParamList = {
   ScriptingSyncVideo: undefined;
   AdminSettings: undefined;
   AdminSettingsPlayerCard: { playerObject: Player };
-  AdminSettingsUserCard: { userObject: any };
+  AdminSettingsUserCard: { userObject: SquadMember };
 };
 
 export type RootStackNavigation = NativeStackNavigationProp<RootStackParamList>;
@@ -60,3 +60,5 @@ export type ScriptingSyncVideoScreenProps = NativeStackScreenProps<RootStackPara
 export type AdminSettingsScreenProps = NativeStackScreenProps<RootStackParamList, 'AdminSettings'>;
 
 export type AdminSettingsPlayerCardScreenProps = NativeStackScreenProps<RootStackParamList, 'AdminSettingsPlayerCard'>;
+
+export type AdminSettingsUserCardScreenProps = NativeStackScreenProps<RootStackParamList, 'AdminSettingsUserCard'>;

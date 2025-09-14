@@ -41,6 +41,7 @@ interface SquadMember {
 	userId: number;
 	teamId: number;
 	username?: string;
+	email?: string;
 	isPlayer?: boolean;
 	isCoach?: boolean;
 	isAdmin?: boolean;

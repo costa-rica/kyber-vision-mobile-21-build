@@ -904,7 +904,7 @@ The implementation closely follows the v18 reference while properly converting t
 
 **Verified implementation** with TypeScript type checking - all types pass without errors. The AdminSettings screen provides complete team management functionality matching the original JavaScript version while leveraging TypeScript's benefits for better code quality and developer experience.
 
-## Implemented AdminSettingsPlayerCard.tsx (commit )
+## Implemented AdminSettingsPlayerCard (commit 2e10c6ac8c2e1da70dec00c91d7d2f61c2006c1a)
 
 **AdminSettingsPlayerCard.tsx** (`src/app/user-admin/AdminSettingsPlayerCard.tsx`) - player detail screen for team management:
 
@@ -965,3 +965,67 @@ The implementation closely follows the v18 reference while properly converting t
 - Responsive design matching the original layout and styling
 
 **Verified implementation** with TypeScript type checking - all types pass without errors. The AdminSettingsPlayerCard screen provides complete player profile functionality matching the original JavaScript version while leveraging TypeScript's benefits for better code quality and developer experience.
+
+## Implemented AdminSettingsUserCard (commit )
+
+**AdminSettingsUserCard.tsx** (`src/app/user-admin/AdminSettingsUserCard.tsx`) - user detail screen for squad member management:
+
+- Complete TypeScript conversion from `docs/kyber-vision-mobile-18-ref/screens/AdminSettingsUserCard.js`
+- User profile display with username and default profile picture
+- Role management system with Admin and Coach role toggles
+- Dynamic role labels showing current user roles (Admin, Coach, Player, Member)
+- Interactive role selection dropdown with visual feedback
+- Squad member removal functionality with confirmation dialog
+- Admin permission checking to show/hide management features
+- Image background with role labels using AdminSettingsPlayerCardWaveThing.png
+- Error handling with proper try-catch blocks for API operations
+
+**Enhanced Type Definitions:**
+
+- **SquadMember interface** updated in team reducer to include:
+  - Added `email` property for admin status validation
+  - Maintained existing `username`, `isPlayer`, `isCoach`, and `isAdmin` properties
+- **AdminSettingsUserCardScreenProps** type for proper navigation typing
+- **RoleOption interface** for type-safe role dropdown management
+
+**Navigation Integration:**
+
+- Added AdminSettingsUserCard screen to navigation stack in App.tsx
+- Updated navigation types with proper SquadMember object parameter typing
+- Proper navigation flow from AdminSettings to AdminSettingsUserCard
+- Navigation back on successful user removal
+
+**Assets Added:**
+
+- Copied `iconMissingProfilePicture.png` from reference to `src/assets/images/multi-use/`
+- Utilized existing `btnUserCardRemoveUser.svg` for remove user functionality
+- Proper asset integration with require() statements for local images
+
+**Role Management System:**
+
+- Dynamic role array generation based on user permissions
+- API integration for role toggling with `/contract-team-users/toggle-role` endpoint
+- Redux state management for squad members array updates
+- Visual feedback for selected roles with highlighted styling
+- Protection against self-admin modification
+
+**API Integration:**
+
+- Toggle user roles: `POST /contract-team-users/toggle-role`
+- Remove squad member: `DELETE /contract-team-users/`
+- Proper error handling with user-friendly alerts
+- Redux state synchronization after API operations
+
+**Key Features:**
+
+- Complete user profile management interface
+- Visual role badge system with dynamic role display
+- Admin permission-based UI rendering for role management
+- Confirmation dialogs for destructive actions (user removal)
+- Role dropdown with visual selection indicators
+- Type-safe Redux integration with user and team state management
+- Responsive design matching the original layout and styling
+- Self-protection mechanism preventing admins from removing their own admin status
+- Automatic navigation back to AdminSettings after user removal
+
+**Verified implementation** with TypeScript type checking - all types pass without errors. The AdminSettingsUserCard screen provides complete user profile and role management functionality matching the original JavaScript version while leveraging TypeScript's benefits for better code quality and developer experience.

@@ -1,4 +1,3 @@
-import * as FileSystem from "expo-file-system";
 import {
 	StyleSheet,
 	Text,
@@ -6,30 +5,18 @@ import {
 	Image,
 	Dimensions,
 	TouchableOpacity,
-	FlatList,
-	Modal,
-	Pressable,
-	TouchableWithoutFeedback,
 	Alert,
 	ImageBackground,
-	ScrollView,
 } from "react-native";
-// import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import BtnVisibilityDown from "../assets/images/buttons/btnVisibilityDown.svg";
 import BtnVisibilityUp from "../assets/images/buttons/btnVisibilityUp.svg";
-import IconMagnifingGlass from "../assets/images/iconMagnifingGlass.svg";
 import BtnUserCardRemoveUser from "../assets/images/adminSettings/btnUserCardRemoveUser.svg";
 import { updateSquadMembersArray } from "../reducers/team";
-import { updateContractTeamUserArray } from "../reducers/user";
-import AdminSettingsPlayerCardWaveThing from "../assets/images/AdminSettingsPlayerCardWaveThing.svg";
-import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
-import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 import ModalAdminSettingsPlayerCardLinkUser from "./subcomponents/modals/ModalAdminSettingsPlayerCardLinkUser";
 import ModalAdminSettingsDeletePlayerUserLinkYesNo from "./subcomponents/modals/ModalAdminSettingsDeletePlayerUserLinkYesNo";
-// import { ScrollView } from "react-native-gesture-handler";
 
 export default function AdminSettingsUserCard({ navigation, route }) {
 	const [userObject, setUserObject] = useState(route.params.userObject);
