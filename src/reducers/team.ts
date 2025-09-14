@@ -10,6 +10,9 @@ interface Player {
 	selected: boolean;
 	position?: string;
 	positionAbbreviation?: string;
+	image?: string;
+	isUser?: boolean;
+	username?: string;
 }
 
 interface Team {

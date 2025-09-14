@@ -18,6 +18,7 @@ import ReviewVideo from "./review/ReviewVideo";
 import ScriptingSyncVideoSelection from "./review/ScriptingSyncVideoSelection";
 import ScriptingSyncVideo from "./review/ScriptingSyncVideo";
 import AdminSettings from "./user-admin/AdminSettings";
+import AdminSettingsPlayerCard from "./user-admin/AdminSettingsPlayerCard";
 
 import type { RootStackParamList } from "../types/navigation";
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -60,6 +61,7 @@ const Index = () => {
 							component={ScriptingSyncVideo}
 						/>
 						<Stack.Screen name="AdminSettings" component={AdminSettings} />
+						<Stack.Screen name="AdminSettingsPlayerCard" component={AdminSettingsPlayerCard} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</PersistGate>

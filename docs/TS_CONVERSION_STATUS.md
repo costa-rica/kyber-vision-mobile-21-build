@@ -839,7 +839,7 @@ The implementation closely follows the v18 reference while properly converting t
 
 The implementation closely follows the v18 reference while properly converting to TypeScript with strict typing. The screen enables users to synchronize scripted volleyball actions with video timestamps for accurate playback timing.
 
-## Implemented AdminSettings (commit )
+## Implemented AdminSettings (commit eaef9c5c2013de3ecfd1c7ab0604f08cb03be333)
 
 **AdminSettings.tsx** (`src/app/user-admin/AdminSettings.tsx`) - main admin settings screen for team management:
 
@@ -903,3 +903,65 @@ The implementation closely follows the v18 reference while properly converting t
 - Confirmation dialogs for destructive actions
 
 **Verified implementation** with TypeScript type checking - all types pass without errors. The AdminSettings screen provides complete team management functionality matching the original JavaScript version while leveraging TypeScript's benefits for better code quality and developer experience.
+
+## Implemented AdminSettingsPlayerCard.tsx (commit )
+
+**AdminSettingsPlayerCard.tsx** (`src/app/user-admin/AdminSettingsPlayerCard.tsx`) - player detail screen for team management:
+
+- Complete TypeScript conversion from `docs/kyber-vision-mobile-18-ref/screens/AdminSettingsPlayerCard.js`
+- Player profile display with profile picture support and local caching
+- Player information display including name, shirt number, and position
+- Squad member account linking functionality with search and removal options
+- Image background with role labels using AdminSettingsPlayerCardWaveThing.png
+- Admin permission checking to show/hide management features
+- Modal integration for user account linking and unlinking operations
+- File system integration for profile picture caching using expo-file-system
+- Error handling with proper try-catch blocks for file operations
+
+**Enhanced Type Definitions:**
+
+- **Player interface** updated in team reducer to include:
+  - Added `image` property for profile picture file names
+  - Added `isUser` boolean to indicate if player is linked to a user account
+  - Added `username` property for linked user account display
+- **AdminSettingsPlayerCardScreenProps** type for proper navigation typing
+- **ModalComponentAndSetterObject** interface for modal management
+
+**Navigation Integration:**
+
+- Added AdminSettingsPlayerCard screen to navigation stack in App.tsx
+- Updated navigation types with proper Player object parameter typing
+- Proper navigation flow from AdminSettings to AdminSettingsPlayerCard
+
+**Modal Components Created:**
+
+- **ModalAdminSettingsPlayerCardLinkUser.tsx** - placeholder modal for linking player to user account
+- **ModalAdminSettingsDeletePlayerUserLinkYesNo.tsx** - confirmation modal for removing user account link
+- Both components include proper TypeScript interfaces and placeholder functionality
+- Integration with existing button components and styling patterns
+
+**Assets Added:**
+
+- Copied `btnCircleXGray.png` from reference to `src/assets/images/multi-use/`
+- Copied `AdminSettingsPlayerCardWaveThing.png` from reference to `src/assets/images/user-admin/`
+- Proper asset integration with require() statements for local images
+
+**File System Integration:**
+
+- Profile picture downloading and caching using expo-file-system
+- Local storage management with directory creation and file existence checks
+- Image URI state management for displaying cached profile pictures
+- Error handling for network and file system operations
+
+**Key Features:**
+
+- Complete player profile management interface
+- Visual player card design with jersey number circle and role labels
+- Conditional rendering based on admin permissions and user link status
+- Image background integration for enhanced visual design
+- Profile picture support with automatic download and caching
+- Squad member account management with search and removal functionality
+- Type-safe Redux integration with user and team state management
+- Responsive design matching the original layout and styling
+
+**Verified implementation** with TypeScript type checking - all types pass without errors. The AdminSettingsPlayerCard screen provides complete player profile functionality matching the original JavaScript version while leveraging TypeScript's benefits for better code quality and developer experience.

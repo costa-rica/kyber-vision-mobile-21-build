@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import * as FileSystem from "expo-file-system";
 import {
 	StyleSheet,
@@ -5,47 +6,51 @@ import {
 	View,
 	Image,
 	Dimensions,
-	TouchableOpacity,
-	FlatList,
-	Modal,
-	Pressable,
-	TouchableWithoutFeedback,
-	Alert,
 	ImageBackground,
 } from "react-native";
-// import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
-import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
-import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
-import IconMagnifingGlass from "../assets/images/iconMagnifingGlass.svg";
+import ScreenFrameWithTopChildrenSmall from "../../components/screen-frames/ScreenFrameWithTopChildrenSmall";
+import { useSelector } from "react-redux";
+import IconMagnifingGlass from "../../assets/images/review/iconMagnifingGlass.svg";
+import ButtonKvNoDefault from "../../components/buttons/ButtonKvNoDefault";
+import ModalAdminSettingsPlayerCardLinkUser from "../../components/modals/ModalAdminSettingsPlayerCardLinkUser";
+import ModalAdminSettingsDeletePlayerUserLinkYesNo from "../../components/modals/ModalAdminSettingsDeletePlayerUserLinkYesNo";
+import { RootState } from "../../types/store";
+import { AdminSettingsPlayerCardScreenProps } from "../../types/navigation";
+import { Player } from "../../reducers/team";
 
-import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
-import ModalAdminSettingsPlayerCardLinkUser from "./subcomponents/modals/ModalAdminSettingsPlayerCardLinkUser";
-import ModalAdminSettingsDeletePlayerUserLinkYesNo from "./subcomponents/modals/ModalAdminSettingsDeletePlayerUserLinkYesNo";
+interface ModalComponentAndSetterObject {
+	modalComponent: React.ReactElement;
+	useState: boolean;
+	useStateSetter: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export default function AdminSettingsPlayerCard({ navigation, route }) {
-	const [playerObject, setPlayerObject] = useState(route.params.playerObject);
-	const userReducer = useSelector((state) => state.user);
-	const teamReducer = useSelector((state) => state.team);
-	const [localImageUri, setLocalImageUri] = useState(null);
+export default function AdminSettingsPlayerCard({
+	navigation,
+	route,
+}: AdminSettingsPlayerCardScreenProps) {
+	const [playerObject, setPlayerObject] = useState<Player>(route.params.playerObject);
+	const userReducer = useSelector((state: RootState) => state.user);
+	const teamReducer = useSelector((state: RootState) => state.team);
+	const [localImageUri, setLocalImageUri] = useState<string | null>(null);
 	const [isVisibleLinkUserModal, setIsVisibleLinkUserModal] = useState(false);
-	const [
-		isVisibleDeletePlayerUserLinkModal,
-		setIsVisibleDeletePlayerUserLinkModal,
-	] = useState(false);
-	const isAdminOfThisTeam = userReducer.contractTeamUserArray.filter(
-		(team) =>
-			team.teamId ===
-			teamReducer.teamsArray.filter((team) => team.selected)[0].id
-	)[0].isAdmin;
+	const [isVisibleDeletePlayerUserLinkModal, setIsVisibleDeletePlayerUserLinkModal] = useState(false);
+
+	const selectedTeam = teamReducer.teamsArray.filter((team) => team.selected)[0];
+	const selectedTeamId = teamReducer.teamsArray.find((t) => t.selected)?.id;
+	const isAdminOfThisTeam =
+		userReducer.contractTeamUserArray.find(
+			(ctu) => Number(ctu.teamId) === Number(selectedTeamId)
+		)?.isAdmin ?? false;
+
 	const topChildren = (
 		<Text>
-			{teamReducer.teamsArray.filter((team) => team.selected)[0].teamName}{" "}
-			Settings
+			{selectedTeam?.teamName} Settings
 		</Text>
 	);
 
-	const fetchPlayerProfilePicture = async () => {
+	const fetchPlayerProfilePicture = async (): Promise<void> => {
+		if (!playerObject.image) return;
+
 		try {
 			const localDir = `${FileSystem.documentDirectory}profile-pictures/`;
 			await FileSystem.makeDirectoryAsync(localDir, { intermediates: true });
@@ -79,27 +84,26 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
 			if (!playerObject.image) return;
 			const localDir = `${FileSystem.documentDirectory}profile-pictures/`;
 			const fileUri = `${localDir}${playerObject.image}`;
-			const fileInfo = await FileSystem.getInfoAsync(fileUri);
-			if (fileInfo.exists) {
-				setLocalImageUri(fileUri);
-			} else {
+			try {
+				const fileInfo = await FileSystem.getInfoAsync(fileUri);
+				if (fileInfo.exists) {
+					setLocalImageUri(fileUri);
+				} else {
+					await fetchPlayerProfilePicture();
+				}
+			} catch (error) {
+				console.log("Error checking image file:", error);
 				await fetchPlayerProfilePicture();
 			}
 		};
 		checkAndLoadImage();
 	}, [playerObject.image]);
 
-	// // Do we need this?
-	// useEffect(() => {
-	//   // console.log("&&& playerObject updated");
-	// }, [playerObject]);
-
-	const whichModalToDisplay = () => {
+	const whichModalToDisplay = (): ModalComponentAndSetterObject | undefined => {
 		if (isVisibleLinkUserModal) {
 			return {
 				modalComponent: (
 					<ModalAdminSettingsPlayerCardLinkUser
-						// onPressYes={handleLinkUser}
 						playerObject={playerObject}
 						setIsVisibleLinkUserModal={setIsVisibleLinkUserModal}
 						setPlayerObject={setPlayerObject}
@@ -113,7 +117,6 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
 			return {
 				modalComponent: (
 					<ModalAdminSettingsDeletePlayerUserLinkYesNo
-						// onPressYes={handleLinkUser}
 						playerObject={playerObject}
 						setIsVisibleDeletePlayerUserLinkModal={
 							setIsVisibleDeletePlayerUserLinkModal
@@ -128,7 +131,7 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
 	};
 
 	return (
-		<TemplateViewWithTopChildrenSmall
+		<ScreenFrameWithTopChildrenSmall
 			navigation={navigation}
 			topChildren={topChildren}
 			screenName={"AdminSettingsPlayerCard"}
@@ -140,26 +143,25 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
 					<View style={styles.vwPlayerNameAndShirtNumber}>
 						<View style={styles.vwPlayerLeft}>
 							<Text style={styles.txtShirtNumber}>
-								{/* {props.lastActionPlayer.shirtNumber} */}
 								{playerObject.shirtNumber}
 							</Text>
 						</View>
 						<View style={styles.vwPlayerRight}>
 							<Text style={styles.txtPlayerName}>{playerObject.firstName}</Text>
 							<Text style={styles.txtPlayerName}>
-								{playerObject.lastName.toUpperCase()}
+								{playerObject.lastName?.toUpperCase()}
 							</Text>
 						</View>
 					</View>
 					<View style={styles.vwPlayerImage}>
 						<Image
-							source={localImageUri ? { uri: localImageUri } : null}
+							source={localImageUri ? { uri: localImageUri } : undefined}
 							style={styles.imgPlayer}
 						/>
 					</View>
 				</View>
 				<ImageBackground
-					source={require("../assets/images/AdminSettingsPlayerCardWaveThing.png")}
+					source={require("../../assets/images/user-admin/AdminSettingsPlayerCardWaveThing.png")}
 					style={styles.vwPlayerRolesWaveThing}
 				>
 					<View style={styles.vwPlayerLabel}>
@@ -195,10 +197,9 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
 										setIsVisibleDeletePlayerUserLinkModal(true);
 									}}
 									styleView={styles.btnCircleX}
-									styleText={{ fontSize: 20 }}
 								>
 									<Image
-										source={require("../assets/images/btnCircleXGray.png")}
+										source={require("../../assets/images/multi-use/btnCircleXGray.png")}
 										resizeMode="contain"
 										style={styles.imgIconForLink}
 									/>
@@ -219,13 +220,9 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
 							{playerObject.position}
 						</Text>
 					</View>
-					{/* <View style={styles.vwShirtNumber}>
-            <Text style={styles.txtShirtNumberTitle}>Role</Text>
-          </View>
-          <Text style={{ fontSize: 11 }}> {JSON.stringify(playerObject)}</Text> */}
 				</View>
 			</View>
-		</TemplateViewWithTopChildrenSmall>
+		</ScreenFrameWithTopChildrenSmall>
 	);
 }
 
@@ -238,24 +235,16 @@ const styles = StyleSheet.create({
 	// Top
 	// ------------
 	containerTop: {
-		// flex: 1,
 		width: "100%",
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "flex-start",
-		// borderColor: "gray",
-		// borderWidth: 1,
-		// borderStyle: "dashed",
 		zIndex: 1,
 	},
 	vwPlayerTop: {
 		flexDirection: "row",
 	},
 	vwPlayerNameAndShirtNumber: {
-		// borderWidth: 1,
-		// borderColor: "#6E4C84",
-		// borderRadius: 30,
-		// backgroundColor: "blue",
 		flexDirection: "row",
 		gap: 10,
 		padding: 5,
@@ -270,34 +259,26 @@ const styles = StyleSheet.create({
 		height: 60,
 		width: 60,
 		alignItems: "center",
-		justifyContent: "center",
 	},
 	txtShirtNumber: {
-		// fontWeight: "bold",
 		color: "white",
 		fontSize: 40,
-		// borderRadius: 7,
-		// height: 15,
-		// width: 20,
 		textAlign: "center",
-		fontFamily: "ApfelGrotezkSuperBold",
+		fontWeight: "bold",
 	},
 	vwPlayerRight: {
-		// alignItems: "center",
 		justifyContent: "center",
 	},
 	txtPlayerName: {
-		// textAlign: "center",
 		color: "#6E4C84",
 		fontSize: 16,
-		fontFamily: "ApfelGrotezkSemiBold",
+		fontWeight: "600",
 	},
 	vwPlayerImage: {
 		width: 150,
 		height: 150,
 		borderRadius: 75,
 		overflow: "hidden",
-		// backgroundColor: "green",
 	},
 	imgPlayer: {
 		width: "100%",
@@ -305,7 +286,6 @@ const styles = StyleSheet.create({
 		resizeMode: "cover",
 	},
 	vwPlayerRolesWaveThing: {
-		// justifyContent: "center",
 		alignItems: "flex-start",
 		width: Dimensions.get("window").width,
 		height: 100,
@@ -313,8 +293,6 @@ const styles = StyleSheet.create({
 		padding: 10,
 	},
 	vwPlayerLabel: {
-		// height: 40,
-		// width: 80,
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 30,
@@ -335,9 +313,6 @@ const styles = StyleSheet.create({
 		padding: 20,
 		paddingRight: 60,
 		gap: 20,
-		// borderWidth: 1,
-		// borderColor: "gray",
-		// borderStyle: "dashed",
 	},
 	vwLinkedAccount: {
 		width: "100%",
@@ -352,9 +327,7 @@ const styles = StyleSheet.create({
 	vwLinkeAccountInput: {
 		flexDirection: "row",
 		alignItems: "center",
-		// justifyContent: "space-between",
 		gap: 30,
-		// backgroundColor: "red",
 	},
 	btnSearch: {
 		flexDirection: "row",
@@ -366,7 +339,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "#E8E8E8",
 		borderColor: "#806181",
 		borderWidth: 1,
-		// marginVertical: 3,
 	},
 	btnCircleX: {
 		flexDirection: "row",
@@ -376,7 +348,10 @@ const styles = StyleSheet.create({
 		width: 40,
 		borderRadius: 20,
 	},
-
+	imgIconForLink: {
+		width: 30,
+		height: 30,
+	},
 	vwShirtNumber: {
 		borderBottomColor: "gray",
 		borderBottomWidth: 1,
