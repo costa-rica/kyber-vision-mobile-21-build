@@ -69,19 +69,21 @@ export default function Home({ navigation }: HomeScreenProps) {
 						)}
 					</View>
 					<View style={styles.vwRightCapsule}>
-						<TouchableOpacity
-							onPress={() => setDisplayTeamList(!displayTeamList)}
-							style={styles.btnSelectTribe}
-						>
-							<Image
-								source={
-									displayTeamList
-										? require("../../assets/images/multi-use/btnBackArrow.png")
-										: require("../../assets/images/multi-use/btnDownArrow.png")
-								}
-								style={{ width: 40, height: 40 }}
-							/>
-						</TouchableOpacity>
+						{teamReducer.teamsArray.length > 1 && (
+							<TouchableOpacity
+								onPress={() => setDisplayTeamList(!displayTeamList)}
+								style={styles.btnSelectTribe}
+							>
+								<Image
+									source={
+										displayTeamList
+											? require("../../assets/images/multi-use/btnBackArrow.png")
+											: require("../../assets/images/multi-use/btnDownArrow.png")
+									}
+									style={{ width: 40, height: 40 }}
+								/>
+							</TouchableOpacity>
+						)}
 					</View>
 				</View>
 			</View>
@@ -265,10 +267,10 @@ const styles = StyleSheet.create({
 		paddingLeft: 10,
 	},
 	vwRightCapsule: {
-		width: 50,
+		// width: 50,
 		height: "100%",
-		justifyContent: "center",
-		alignItems: "center",
+		// justifyContent: "center",
+		// alignItems: "center",
 	},
 	btnSelectTribe: {
 		width: 40,

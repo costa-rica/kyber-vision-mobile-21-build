@@ -20,13 +20,13 @@ export default function ButtonKvNoDefaultTextOnly({
 }: ButtonKvNoDefaultTextOnlyProps) {
 	const scaleValue = useRef(new Animated.Value(1)).current;
 
-	const [currentBackgroundColor, setCurrentBackgroundColor] = useState<string>(
-		(styleView.backgroundColor as string) || "transparent"
-	);
+	// const [currentBackgroundColor, setCurrentBackgroundColor] = useState<string>(
+	// 	(styleView.backgroundColor as string) || "transparent"
+	// );
 
 	const handlePressIn = () => {
 		if (!active) return;
-		setCurrentBackgroundColor(pressInColor);
+		// setCurrentBackgroundColor(pressInColor);
 		Animated.spring(scaleValue, {
 			toValue: 0.7,
 			useNativeDriver: true,
@@ -35,7 +35,9 @@ export default function ButtonKvNoDefaultTextOnly({
 
 	const handlePressOut = () => {
 		if (!active) return;
-		setCurrentBackgroundColor((styleView.backgroundColor as string) || "transparent");
+		// setCurrentBackgroundColor(
+		// 	(styleView.backgroundColor as string) || "transparent"
+		// );
 		Animated.spring(scaleValue, {
 			toValue: 1,
 			friction: 3,
@@ -48,18 +50,18 @@ export default function ButtonKvNoDefaultTextOnly({
 		}
 	};
 
-	const dynamicStyleView: ViewStyle = {
-		...styleView,
-		backgroundColor: active ? currentBackgroundColor : (styleView.backgroundColor || "transparent"),
-		opacity: active ? 1 : 0.6,
-	};
+	// const dynamicStyleView: ViewStyle = {
+	// 	...styleView,
+	// 	backgroundColor: active ? currentBackgroundColor : (styleView.backgroundColor || "transparent"),
+	// 	opacity: active ? 1 : 0.6,
+	// };
 
 	return (
 		<Animated.View style={{ transform: [{ scale: scaleValue }] }}>
 			<Pressable
 				onPressIn={handlePressIn}
 				onPressOut={handlePressOut}
-				style={dynamicStyleView}
+				style={styleView}
 				disabled={!active}
 			>
 				<Text style={styleText}>{children}</Text>
