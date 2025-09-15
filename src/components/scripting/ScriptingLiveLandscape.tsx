@@ -9,7 +9,7 @@ import {
 	ViewStyle,
 } from "react-native";
 import {
-	GestureHandlerRootView,
+	// GestureHandlerRootView,
 	GestureDetector,
 } from "react-native-gesture-handler";
 import ScreenFrameWithTopChildrenSmallLandscape from "../screen-frames/ScreenFrameWithTopChildrenSmallLandscape";
@@ -512,7 +512,8 @@ export default function ScriptingLiveLandscape(
 								</ScrollView>
 							</View>
 						)}
-						<GestureHandlerRootView>
+						{/* <GestureHandlerRootView> */}
+						<View style={styles.column}>
 							<GestureDetector gesture={props.combinedGestures}>
 								<View
 									style={styles.containerMiddleBottom}
@@ -548,7 +549,8 @@ export default function ScriptingLiveLandscape(
 									/>
 								</View>
 							</GestureDetector>
-						</GestureHandlerRootView>
+						</View>
+						{/* </GestureHandlerRootView> */}
 					</View>
 					<View style={styles.vwFavoriteParent}>
 						<View style={stylesVwButtonFavorite}>

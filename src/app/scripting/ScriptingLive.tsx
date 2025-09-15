@@ -150,7 +150,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 				ScreenOrientation.OrientationLock.PORTRAIT_UP
 			);
 		};
-	});
+	}, []);
 
 	const checkOrientation = async () => {
 		const orientationObject = await ScreenOrientation.getOrientationAsync();
@@ -163,30 +163,6 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 			setOrientation("portrait");
 		}
 	};
-
-	// const handleOrientationChange = async (
-	// 	orientationChangeEvent: ScreenOrientation.OrientationChangeEvent
-	// ) => {
-	// 	const { orientationInfo } = orientationChangeEvent;
-	// 	console.log("----> orientationInfo", orientationInfo);
-	// 	if (
-	// 		orientationInfo.orientation ===
-	// 			ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-	// 		orientationInfo.orientation ===
-	// 			ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-	// 	) {
-	// 		setOrientation("landscape");
-	// 		await ScreenOrientation.lockAsync(
-	// 			// ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
-	// 			ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
-	// 		);
-	// 	} else {
-	// 		setOrientation("portrait");
-	// 		await ScreenOrientation.lockAsync(
-	// 			ScreenOrientation.OrientationLock.PORTRAIT_UP
-	// 		);
-	// 	}
-	// };
 
 	// Swipe Pad - 1
 

@@ -15,7 +15,7 @@ import ButtonKvStd from "../buttons/ButtonKvStd";
 import ButtonKvNoDefaultTextOnly from "../buttons/ButtonKvNoDefaultTextOnly";
 import ButtonKvNoDefault from "../buttons/ButtonKvNoDefault";
 import {
-	GestureHandlerRootView,
+	// GestureHandlerRootView,
 	GestureDetector,
 } from "react-native-gesture-handler";
 import SvgVolleyballCourt from "../../assets/images/scripting/volleyballCourt.svg";
@@ -674,7 +674,8 @@ export default function ScriptingLivePortrait(
 						</ScrollView>
 					</View>
 				)}
-				<GestureHandlerRootView style={{}}>
+				{/* <GestureHandlerRootView style={{}}> */}
+				<View style={{}}>
 					<GestureDetector gesture={props.combinedGestures}>
 						<View
 							style={[
@@ -711,7 +712,8 @@ export default function ScriptingLivePortrait(
 							<SvgVolleyballCourt />
 						</View>
 					</GestureDetector>
-				</GestureHandlerRootView>
+				</View>
+				{/* </GestureHandlerRootView> */}
 			</View>
 
 			<View style={styles.containerBottom}>

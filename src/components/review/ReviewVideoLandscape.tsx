@@ -19,7 +19,7 @@ import {
 } from "../../reducers/review";
 import SwitchKvWhite from "../buttons/SwitchKvWhite";
 import Timeline from "./Timeline";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+// import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ButtonKvImage from "../buttons/ButtonKvImage";
 import { useDispatch, useSelector } from "react-redux";
 import YoutubePlayer from "react-native-youtube-iframe";
@@ -397,14 +397,16 @@ export default function ReviewVideoLandscape(props: ReviewVideoLandscapeProps) {
 					zIndex: 2,
 				}}
 			>
-				<GestureHandlerRootView style={styles.gestureViewTimeline}>
+				{/* <GestureHandlerRootView style={styles.gestureViewTimeline}> */}
+				<View style={styles.gestureViewTimeline}>
 					<Timeline
 						currentTime={props.currentTime}
 						duration={props.duration}
 						playerRef={props.playerRef}
 						onSeek={props.onSeek}
 					/>
-				</GestureHandlerRootView>
+					{/* </GestureHandlerRootView> */}
+				</View>
 			</View>
 			{isDropdownVisible && (
 				<View style={styles.vwPlayersOptions}>
