@@ -10,6 +10,7 @@ import {
 	PanGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { Platform } from "react-native";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../types/store";
@@ -139,15 +140,44 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	const [orientation, setOrientation] = useState("portrait");
 
 	useEffect(() => {
-		ScreenOrientation.unlockAsync();
-		checkOrientation();
-		const subscriptionScreenOrientation =
-			ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+		let sub: ScreenOrientation.Subscription | null = null;
+
+		(async () => {
+			// Allow free rotation while on this screen (choose ALL or ALL_BUT_UPSIDE_DOWN)
+			await ScreenOrientation.lockAsync(
+				Platform.OS === "ios"
+					? ScreenOrientation.OrientationLock.DEFAULT // iPhone default excludes upside-down
+					: ScreenOrientation.OrientationLock.ALL // Android: allow all
+			);
+
+			// Set initial state once
+			const initial = await ScreenOrientation.getOrientationAsync();
+			setOrientation(
+				initial === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+					initial === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+					? "landscape"
+					: "portrait"
+			);
+
+			sub = ScreenOrientation.addOrientationChangeListener((e) => {
+				const o = e.orientationInfo.orientation;
+				setOrientation(
+					o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+						o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+						? "landscape"
+						: "portrait"
+				);
+			});
+		})();
 
 		return () => {
-			subscriptionScreenOrientation.remove();
+			sub?.remove();
+			// Optional safety if your exit handler always locks to PORTRAIT_UP:
+			ScreenOrientation.lockAsync(
+				ScreenOrientation.OrientationLock.PORTRAIT_UP
+			).catch(() => {});
 		};
-	}, [orientation]); // <<-- ChatGPT says this is a bad option becuase it re-renders and could cause issues like leaks
+	}, []); // <-- not [orientation]
 
 	const checkOrientation = async () => {
 		const orientationObject = await ScreenOrientation.getOrientationAsync();
