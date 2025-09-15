@@ -75,6 +75,7 @@ export default function ScriptingLiveSelectPlayers({
 	);
 
 	const fetchPlayers = async () => {
+		console.log("[4] Fetching players online");
 		const selectedTeam = teamReducer.teamsArray.find((tribe) => tribe.selected);
 
 		if (!selectedTeam) {
@@ -109,8 +110,9 @@ export default function ScriptingLiveSelectPlayers({
 					...item,
 					selected: false,
 				}));
+				console.log(JSON.stringify(tempArray, null, 2));
 				dispatch(updatePlayersArray(tempArray));
-				dispatch(createPlayerArrayPositionProperties());
+				dispatch(createPlayerArrayPositionProperties(tempArray));
 			} else {
 				const errorMessage =
 					resJson?.error || `There was a server error: ${response.status}`;
@@ -125,14 +127,31 @@ export default function ScriptingLiveSelectPlayers({
 	const fetchPlayersOffline = () => {
 		console.log("Fetched players offline");
 		dispatch(updatePlayersArray(scriptReducerOffline.playersArray));
-		dispatch(createPlayerArrayPositionProperties());
+		dispatch(
+			createPlayerArrayPositionProperties(scriptReducerOffline.playersArray)
+		);
 	};
 
 	useEffect(() => {
-		if (userReducer.token === "offline") {
-			fetchPlayersOffline();
+		console.log("--- [1] useEffect scriptReducer.playerObjectPositionalArray");
+		scriptReducer.playerObjectPositionalArray.map((p, i) =>
+			console.log(`pos: ${i + 1}, name: ${p.firstName}`)
+		);
+		// console.log(scriptReducer.playerObjectPositionalArray)
+		if (scriptReducer.playerObjectPositionalArray.length === 0) {
+			console.log("[2] Fetching players");
+			if (userReducer.token === "offline") {
+				fetchPlayersOffline();
+			} else {
+				fetchPlayers();
+			}
+			console.log(
+				`[5] scriptReducer.playerObjectPositionalArray.length: ${scriptReducer.playerObjectPositionalArray.length}`
+			);
 		} else {
-			fetchPlayers();
+			console.log(
+				`[3] scriptReducer.playerObjectPositionalArray.length: ${scriptReducer.playerObjectPositionalArray.length}`
+			);
 		}
 		dispatch(
 			reducerSetUserSwipePadWheel({
@@ -146,11 +165,13 @@ export default function ScriptingLiveSelectPlayers({
 	// -- DraggableFlatList
 	const scriptReducerPlayersArray = scriptReducer.playersArray as Player[];
 
-	useEffect(() => {
-		setData(scriptReducerPlayersArray);
-	}, [scriptReducerPlayersArray]);
-	// 3) Type your local state with Player[]
-	const [data, setData] = useState<Player[]>(scriptReducerPlayersArray);
+	// useEffect(() => {
+	// 	setData(scriptReducerPlayersArray);
+	// }, [scriptReducerPlayersArray]);
+	// // }, []);
+
+	// // 3) Type your local state with Player[]
+	// const [data, setData] = useState<Player[]>(scriptReducerPlayersArray);
 
 	const renderItemPlayerRow = useCallback(
 		({ item, drag, isActive }: RenderItemParams<Player>) => {
@@ -166,8 +187,14 @@ export default function ScriptingLiveSelectPlayers({
 					}
 					return { ...p, selected: false };
 				});
+				// setData(tempArray);
 				dispatch(updatePlayersArray(tempArray));
-				dispatch(setScriptingForPlayerObject(player));
+				if (scriptReducer.scriptingForPlayerObject?.id !== player.id) {
+					dispatch(setScriptingForPlayerObject(player));
+				} else {
+					dispatch(setScriptingForPlayerObject(null));
+				}
+				dispatch(createPlayerArrayPositionProperties(tempArray));
 			};
 
 			return (
@@ -206,54 +233,22 @@ export default function ScriptingLiveSelectPlayers({
 		[dispatch, scriptReducer.playersArray]
 	);
 
-	// const PlayerTableButton: React.FC<PlayerTableButtonProps> = ({ player }) => {
-	// 	const handleSelectPlayer = () => {
-	// 		const tempArray = scriptReducer.playersArray.map((item) => {
-	// 			if (item.id === player.id) {
-	// 				setDisplayWarning(false);
-	// 				return {
-	// 					...item,
-	// 					selected: !item.selected,
-	// 				};
-	// 			}
-	// 			return { ...item, selected: false };
-	// 		});
-	// 		dispatch(updatePlayersArray(tempArray));
-	// 		dispatch(setScriptingForPlayerObject(player));
-	// 	};
-
-	// 	return (
-	// 		<TouchableOpacity
-	// 			onPress={handleSelectPlayer}
-	// 			style={[styles.btnPlayer, player.selected && styles.btnPlayerSelected]}
-	// 		>
-	// 			<View style={styles.btnPlayerLeft}>
-	// 				<Text style={styles.txtShirtNumber}>{player.shirtNumber}</Text>
-	// 			</View>
-	// 			<View style={styles.btnPlayerRight}>
-	// 				<Text style={styles.txtPlayerName}>{player.firstName}</Text>
-	// 				<Text style={styles.txtPlayerName}>{player.lastName}</Text>
-	// 			</View>
-	// 		</TouchableOpacity>
+	// const handleSelectPlayerPress = () => {
+	// 	const selectedPlayers = scriptReducer.playersArray.filter(
+	// 		(player) => player.selected
 	// 	);
+
+	// 	if (selectedPlayers.length > 0) {
+	// 		// // TODO: Navigate to ScriptingLive when implemented
+	// 		// Alert.alert(
+	// 		// 	"Coming Soon",
+	// 		// 	"ScriptingLive screen will be implemented next"
+	// 		// );
+	// 		navigation.navigate("ScriptingLive");
+	// 	} else {
+	// 		setDisplayWarning(true);
+	// 	}
 	// };
-
-	const handleSelectPlayerPress = () => {
-		const selectedPlayers = scriptReducer.playersArray.filter(
-			(player) => player.selected
-		);
-
-		if (selectedPlayers.length > 0) {
-			// // TODO: Navigate to ScriptingLive when implemented
-			// Alert.alert(
-			// 	"Coming Soon",
-			// 	"ScriptingLive screen will be implemented next"
-			// );
-			navigation.navigate("ScriptingLive");
-		} else {
-			setDisplayWarning(true);
-		}
-	};
 
 	return (
 		<ScreenFrameWithTopChildrenSmall
@@ -272,33 +267,47 @@ export default function ScriptingLiveSelectPlayers({
 					<View style={styles.vwPlayersTable}>
 						{scriptReducer.playersArray?.length > 0 ? (
 							<DraggableFlatList<Player>
-								data={data}
-								// keyExtractor={(item) => item.key}
+								// data={data}
+								data={scriptReducer.playersArray}
 								keyExtractor={(item: Player) => String(item.id)}
 								renderItem={renderItemPlayerRow}
-								// renderItem={({ item, index, drag, isActive }) =>
-								// 	renderItemPlayerRow({ item, drag, isActive })
-								// }
-								onDragEnd={({ data: newData }) => setData(newData)} // 👈 updates order after drop
+								// onDragEnd={({ data: newData }) => setData(newData)} // 👈 updates order after drop
+								onDragEnd={({ data: newData }) => {
+									dispatch(updatePlayersArray(newData));
+									dispatch(createPlayerArrayPositionProperties(newData));
+								}} // 👈 updates order after drop
 								// Optional niceties:
 								activationDistance={0} // start on long-press by default
 								autoscrollSpeed={50}
 								autoscrollThreshold={50}
-								// containerStyle={styles.listContainer}
-								// contentContainerStyle={styles.listContent}
 							/>
 						) : (
-							// <FlatList
-							// 	data={scriptReducer.playersArray}
-							// 	renderItem={({ item }) => <PlayerTableButton player={item} />}
-							// 	keyExtractor={(item) => item.id.toString()}
-							// />
 							<Text>No players found</Text>
 						)}
 					</View>
 				</View>
 				<View style={styles.containerBottom}>
-					<View style={styles.vwSelectPlayerWarningSuper}>
+					<View style={{ padding: 5 }}>
+						{scriptReducer.scriptingForPlayerObject ? (
+							<Text style={{ fontSize: 16, color: "black" }}>
+								scriptingForPlayerObject:{" "}
+								{scriptReducer.scriptingForPlayerObject?.firstName}
+							</Text>
+						) : (
+							<View>
+								<Text>
+									Positional Players count:{" "}
+									{scriptReducer.playerObjectPositionalArray.length}
+								</Text>
+								{scriptReducer.playerObjectPositionalArray.map((p, i) => (
+									<Text key={p.id}>
+										{i + 1}: {p.firstName}
+									</Text>
+								))}
+							</View>
+						)}
+					</View>
+					{/* <View style={styles.vwSelectPlayerWarningSuper}>
 						{displayWarning && (
 							<View style={styles.vwSelectPlayerWarning}>
 								<WarningTriangle />
@@ -307,23 +316,27 @@ export default function ScriptingLiveSelectPlayers({
 								</Text>
 							</View>
 						)}
-					</View>
+					</View> */}
 					<View style={styles.vwInputGroup}>
 						<ButtonKvNoDefaultTextOnly
-							active={
-								scriptReducer.playersArray.filter((player) => player.selected)
-									.length > 0
-							}
-							onPress={handleSelectPlayerPress}
+							// active={
+							// 	scriptReducer.playersArray.filter((player) => player.selected)
+							// 		.length > 0
+							// }
+							// onPress={handleSelectPlayerPress}
+							onPress={() => navigation.navigate("ScriptingLive")}
 							styleView={styles.btnSelectPlayer}
-							styleText={
-								scriptReducer.playersArray.filter((player) => player.selected)
-									.length > 0
-									? styles.btnSelectPlayerText
-									: styles.btnSelectPlayerTextInactive
-							}
+							styleText={styles.btnSelectPlayerText}
+							// styleText={
+							// 	scriptReducer.playersArray.filter((player) => player.selected)
+							// 		.length > 0
+							// 		? styles.btnSelectPlayerText
+							// 		: styles.btnSelectPlayerTextInactive
+							// }
 						>
-							Select Player
+							{scriptReducer.scriptingForPlayerObject
+								? "Script selected player"
+								: "Script 6 players"}
 						</ButtonKvNoDefaultTextOnly>
 					</View>
 				</View>
@@ -411,7 +424,7 @@ const styles = StyleSheet.create({
 		fontSize: 22,
 	},
 	containerBottom: {
-		height: "15%",
+		// height: "15%",
 		width: Dimensions.get("window").width * 0.9,
 	},
 	vwSelectPlayerWarningSuper: {

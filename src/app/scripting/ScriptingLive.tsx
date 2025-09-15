@@ -721,13 +721,25 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 			);
 			return;
 		}
+
+		let playerId = null;
+		if (scriptReducer.scriptingForPlayerObject !== null) {
+			playerId = scriptReducer.scriptingForPlayerObject.id.toString();
+		} else {
+			playerId =
+				scriptReducer.playerObjectPositionalArray[
+					lastActionAreaIndexRef.current! - 1
+				].id.toString();
+		}
+
 		const newActionObj: SessionAction = {
 			dateScripted: new Date().toISOString(),
 			timestamp: Date.now(),
 			type: type,
 			subtype: null,
 			quality: quality || "0",
-			playerId: scriptReducer.scriptingForPlayerObject!.id.toString(),
+			// playerId: scriptReducer.scriptingForPlayerObject!.id.toString(),
+			playerId: playerId,
 			scriptId: null,
 			newAction: true,
 			pointId: `${Date.now()}`,

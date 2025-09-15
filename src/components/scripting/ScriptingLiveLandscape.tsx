@@ -441,32 +441,33 @@ export default function ScriptingLiveLandscape(
 								</View>
 							</View>
 						</View>
-
-						<View style={stylesVwPlayerSuperNoHeight}>
-							<View style={stylesVwPlayerAbsolutePosition}>
-								<ButtonKvNoDefault
-									onPress={() => {
-										console.log("pressed");
-										props.setDropdownVisibility("scriptingPlayer");
-									}}
-									styleView={stylesVwPlayer}
-								>
-									<View style={styles.vwPlayerLeft}>
-										<Text style={styles.txtShirtNumber}>
-											{scriptReducer.scriptingForPlayerObject?.shirtNumber}
-										</Text>
-									</View>
-									<View style={styles.vwPlayerRight}>
-										<Text style={styles.txtPlayerName}>
-											{scriptReducer.scriptingForPlayerObject?.firstName}
-										</Text>
-										<Text style={styles.txtPlayerName}>
-											{scriptReducer.scriptingForPlayerObject?.lastName}
-										</Text>
-									</View>
-								</ButtonKvNoDefault>
+						{scriptReducer.scriptingForPlayerObject && (
+							<View style={stylesVwPlayerSuperNoHeight}>
+								<View style={stylesVwPlayerAbsolutePosition}>
+									<ButtonKvNoDefault
+										onPress={() => {
+											console.log("pressed");
+											props.setDropdownVisibility("scriptingPlayer");
+										}}
+										styleView={stylesVwPlayer}
+									>
+										<View style={styles.vwPlayerLeft}>
+											<Text style={styles.txtShirtNumber}>
+												{scriptReducer.scriptingForPlayerObject?.shirtNumber}
+											</Text>
+										</View>
+										<View style={styles.vwPlayerRight}>
+											<Text style={styles.txtPlayerName}>
+												{scriptReducer.scriptingForPlayerObject?.firstName}
+											</Text>
+											<Text style={styles.txtPlayerName}>
+												{scriptReducer.scriptingForPlayerObject?.lastName}
+											</Text>
+										</View>
+									</ButtonKvNoDefault>
+								</View>
 							</View>
-						</View>
+						)}
 						{props.scriptingPlayerDropdownIsVisible && (
 							<View style={stylesDropDownScriptingPlayer}>
 								<ScrollView style={stylesDropDownScriptingPlayerScrollView}>
