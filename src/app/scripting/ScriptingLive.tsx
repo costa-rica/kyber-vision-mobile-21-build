@@ -146,11 +146,8 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 
 		return () => {
 			subscriptionScreenOrientation.remove();
-			ScreenOrientation.lockAsync(
-				ScreenOrientation.OrientationLock.PORTRAIT_UP
-			);
 		};
-	}, []);
+	}, [orientation]); // <<-- ChatGPT says this is a bad option becuase it re-renders and could cause issues like leaks
 
 	const checkOrientation = async () => {
 		const orientationObject = await ScreenOrientation.getOrientationAsync();
