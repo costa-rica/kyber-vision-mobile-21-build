@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React from "react";
+// import { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Splash from "./welcome/Splash";
@@ -28,7 +28,29 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "../types/store";
 
+import { useState, useEffect } from "react";
+import * as Font from "expo-font";
 const Index = () => {
+	const [fontsLoaded, setFontsLoaded] = useState(false);
+	useEffect(() => {
+		async function loadFonts() {
+			await Font.loadAsync({
+				ApfelGrotezk: require("../assets/fonts/ApfelGrotezk-Regular.otf"),
+				ApfelGrotezkSemiBold: require("../assets/fonts/ApfelGrotezk-Mittel.otf"),
+				ApfelGrotezkBold: require("../assets/fonts/ApfelGrotezk-Fett.otf"),
+				ApfelGrotezkSuperBold: require("../assets/fonts/ApfelGrotezk-Satt.otf"),
+				Caveat: require("../assets/fonts/Caveat-VariableFont_wght.ttf"),
+			});
+			setFontsLoaded(true);
+		}
+		loadFonts();
+	}, []);
+
+	if (!fontsLoaded) {
+		console.log("-font NOT loaded");
+	} else {
+		console.log("- font loaded 🖋️ ");
+	}
 	return (
 		<Provider store={store}>
 			<PersistGate persistor={persistor}>
@@ -62,8 +84,14 @@ const Index = () => {
 							component={ScriptingSyncVideo}
 						/>
 						<Stack.Screen name="AdminSettings" component={AdminSettings} />
-						<Stack.Screen name="AdminSettingsPlayerCard" component={AdminSettingsPlayerCard} />
-						<Stack.Screen name="AdminSettingsUserCard" component={AdminSettingsUserCard} />
+						<Stack.Screen
+							name="AdminSettingsPlayerCard"
+							component={AdminSettingsPlayerCard}
+						/>
+						<Stack.Screen
+							name="AdminSettingsUserCard"
+							component={AdminSettingsUserCard}
+						/>
 					</Stack.Navigator>
 				</NavigationContainer>
 			</PersistGate>

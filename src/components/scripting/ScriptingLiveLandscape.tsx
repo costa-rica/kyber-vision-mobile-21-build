@@ -786,6 +786,7 @@ const styles = StyleSheet.create({
 		height: 15,
 		width: 20,
 		textAlign: "center",
+		fontFamily: "ApfelGrotezkBold",
 	},
 	vwPlayerRight: {
 		alignItems: "center",

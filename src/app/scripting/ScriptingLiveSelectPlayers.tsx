@@ -305,6 +305,7 @@ const styles = StyleSheet.create({
 		color: "white",
 		fontSize: 36,
 		padding: 10,
+		fontFamily: "ApfelGrotezkBold",
 	},
 	btnPlayerRight: {
 		alignItems: "center",
