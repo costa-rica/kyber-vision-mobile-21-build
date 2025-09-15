@@ -150,7 +150,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 				ScreenOrientation.OrientationLock.PORTRAIT_UP
 			);
 		};
-	}, []);
+	});
 
 	const checkOrientation = async () => {
 		const orientationObject = await ScreenOrientation.getOrientationAsync();
@@ -164,21 +164,53 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 		}
 	};
 
+	// const handleOrientationChange = async (
+	// 	orientationChangeEvent: ScreenOrientation.OrientationChangeEvent
+	// ) => {
+	// 	const { orientationInfo } = orientationChangeEvent;
+	// 	console.log("----> orientationInfo", orientationInfo);
+	// 	if (
+	// 		orientationInfo.orientation ===
+	// 			ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+	// 		orientationInfo.orientation ===
+	// 			ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+	// 	) {
+	// 		setOrientation("landscape");
+	// 		await ScreenOrientation.lockAsync(
+	// 			// ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+	// 			ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
+	// 		);
+	// 	} else {
+	// 		setOrientation("portrait");
+	// 		await ScreenOrientation.lockAsync(
+	// 			ScreenOrientation.OrientationLock.PORTRAIT_UP
+	// 		);
+	// 	}
+	// };
+
+	// Swipe Pad - 1
+
 	const handleOrientationChange = async (
-		orientationChangeEvent: ScreenOrientation.OrientationChangeEvent
+		event: ScreenOrientation.OrientationChangeEvent
 	) => {
-		const { orientationInfo } = orientationChangeEvent;
+		const o = event.orientationInfo.orientation;
+
+		// Always unlock before switching locks
+		await ScreenOrientation.unlockAsync();
+
 		if (
-			orientationInfo.orientation ===
-				ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-			orientationInfo.orientation ===
-				ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+			o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+			o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
 		) {
 			setOrientation("landscape");
+			// Allow either landscape side so it never appears upside down
 			await ScreenOrientation.lockAsync(
-				ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+				ScreenOrientation.OrientationLock.LANDSCAPE
 			);
-		} else {
+		} else if (
+			o === ScreenOrientation.Orientation.PORTRAIT_UP ||
+			o === ScreenOrientation.Orientation.PORTRAIT_DOWN
+		) {
 			setOrientation("portrait");
 			await ScreenOrientation.lockAsync(
 				ScreenOrientation.OrientationLock.PORTRAIT_UP
@@ -186,7 +218,6 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 		}
 	};
 
-	// Swipe Pad - 1
 	const [padVisible, setPadVisible] = useState(false);
 	const [tapIsActive, setTapIsActive] = useState(true);
 	const [tapDetails, setTapDetails] = useState({

@@ -805,14 +805,14 @@ export default function ScriptingLivePortrait(
 					</View>
 				</View>
 			</View>
-			<View>
+			{/* <View>
 				<Text>Player positions</Text>
 				<ScrollView style={{ height: 150 }}>
 					<Text>
 						{JSON.stringify(scriptReducer.sessionActionsArray, null, 2)}
 					</Text>
 				</ScrollView>
-			</View>
+			</View> */}
 		</View>
 	);
 }
