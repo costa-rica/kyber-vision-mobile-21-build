@@ -7,7 +7,7 @@ import {
 	TouchableOpacity,
 	Alert,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ScreenFrameWithTopChildrenSmall from "../../components/screen-frames/ScreenFrameWithTopChildrenSmall";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../types/store";
@@ -24,6 +24,12 @@ import { scriptReducerOffline } from "../../data/scriptReducerOffline";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../types/navigation";
 
+import DraggableFlatList, {
+	ScaleDecorator,
+} from "react-native-draggable-flatlist";
+// NEW: import the types for the draggable list
+import type { RenderItemParams } from "react-native-draggable-flatlist";
+
 type ScriptingLiveSelectPlayersScreenProps = NativeStackScreenProps<
 	RootStackParamList,
 	"ScriptingLiveSelectPlayers"
@@ -38,6 +44,16 @@ interface PlayerTableButtonProps {
 		positionArea?: number | null;
 		selected?: boolean;
 	};
+}
+
+// 1) Give your items a concrete, reusable type
+export interface Player {
+	id: number;
+	firstName: string;
+	lastName: string;
+	shirtNumber: number;
+	positionArea?: number | null;
+	selected?: boolean;
 }
 
 export default function ScriptingLiveSelectPlayers({
@@ -127,37 +143,100 @@ export default function ScriptingLiveSelectPlayers({
 		);
 	}, []);
 
-	const PlayerTableButton: React.FC<PlayerTableButtonProps> = ({ player }) => {
-		const handleSelectPlayer = () => {
-			const tempArray = scriptReducer.playersArray.map((item) => {
-				if (item.id === player.id) {
-					setDisplayWarning(false);
-					return {
-						...item,
-						selected: !item.selected,
-					};
-				}
-				return { ...item, selected: false };
-			});
-			dispatch(updatePlayersArray(tempArray));
-			dispatch(setScriptingForPlayerObject(player));
-		};
+	// -- DraggableFlatList
+	const scriptReducerPlayersArray = scriptReducer.playersArray as Player[];
 
-		return (
-			<TouchableOpacity
-				onPress={handleSelectPlayer}
-				style={[styles.btnPlayer, player.selected && styles.btnPlayerSelected]}
-			>
-				<View style={styles.btnPlayerLeft}>
-					<Text style={styles.txtShirtNumber}>{player.shirtNumber}</Text>
-				</View>
-				<View style={styles.btnPlayerRight}>
-					<Text style={styles.txtPlayerName}>{player.firstName}</Text>
-					<Text style={styles.txtPlayerName}>{player.lastName}</Text>
-				</View>
-			</TouchableOpacity>
-		);
-	};
+	useEffect(() => {
+		setData(scriptReducerPlayersArray);
+	}, [scriptReducerPlayersArray]);
+	// 3) Type your local state with Player[]
+	const [data, setData] = useState<Player[]>(scriptReducerPlayersArray);
+
+	const renderItemPlayerRow = useCallback(
+		({ item, drag, isActive }: RenderItemParams<Player>) => {
+			const player = item;
+			const handleSelectPlayer = () => {
+				const tempArray = scriptReducer.playersArray.map((p) => {
+					if (p.id === player.id) {
+						setDisplayWarning(false);
+						return {
+							...p,
+							selected: !p.selected,
+						};
+					}
+					return { ...p, selected: false };
+				});
+				dispatch(updatePlayersArray(tempArray));
+				dispatch(setScriptingForPlayerObject(player));
+			};
+
+			return (
+				<ScaleDecorator>
+					<TouchableOpacity
+						onPress={() => {
+							// console.log(player);
+							handleSelectPlayer();
+						}}
+						key={player.id}
+						style={[
+							styles.btnPlayer,
+							player.selected && styles.btnPlayerSelected,
+						]}
+						onLongPress={drag} // 👈 hold to start dragging
+						disabled={isActive}
+						// style={[
+						//   styles.rowItem,
+						//   { backgroundColor: isActive ? "#9ca3af" : item.backgroundColor },
+						// ]}
+						activeOpacity={0.8}
+					>
+						<View style={styles.btnPlayerLeft}>
+							<Text style={styles.txtShirtNumber}>{player.shirtNumber}</Text>
+						</View>
+						<View style={styles.btnPlayerRight}>
+							<Text style={styles.txtPlayerName}>{player.firstName}</Text>
+							<Text style={styles.txtPlayerName}>{player.lastName}</Text>
+						</View>
+						{/* <Text style={styles.text}>{item.label}</Text>
+						<Text style={styles.hint}>Long-press & drag ↕</Text> */}
+					</TouchableOpacity>
+				</ScaleDecorator>
+			);
+		},
+		[dispatch, scriptReducer.playersArray]
+	);
+
+	// const PlayerTableButton: React.FC<PlayerTableButtonProps> = ({ player }) => {
+	// 	const handleSelectPlayer = () => {
+	// 		const tempArray = scriptReducer.playersArray.map((item) => {
+	// 			if (item.id === player.id) {
+	// 				setDisplayWarning(false);
+	// 				return {
+	// 					...item,
+	// 					selected: !item.selected,
+	// 				};
+	// 			}
+	// 			return { ...item, selected: false };
+	// 		});
+	// 		dispatch(updatePlayersArray(tempArray));
+	// 		dispatch(setScriptingForPlayerObject(player));
+	// 	};
+
+	// 	return (
+	// 		<TouchableOpacity
+	// 			onPress={handleSelectPlayer}
+	// 			style={[styles.btnPlayer, player.selected && styles.btnPlayerSelected]}
+	// 		>
+	// 			<View style={styles.btnPlayerLeft}>
+	// 				<Text style={styles.txtShirtNumber}>{player.shirtNumber}</Text>
+	// 			</View>
+	// 			<View style={styles.btnPlayerRight}>
+	// 				<Text style={styles.txtPlayerName}>{player.firstName}</Text>
+	// 				<Text style={styles.txtPlayerName}>{player.lastName}</Text>
+	// 			</View>
+	// 		</TouchableOpacity>
+	// 	);
+	// };
 
 	const handleSelectPlayerPress = () => {
 		const selectedPlayers = scriptReducer.playersArray.filter(
@@ -192,12 +271,28 @@ export default function ScriptingLiveSelectPlayers({
 					</View>
 					<View style={styles.vwPlayersTable}>
 						{scriptReducer.playersArray?.length > 0 ? (
-							<FlatList
-								data={scriptReducer.playersArray}
-								renderItem={({ item }) => <PlayerTableButton player={item} />}
-								keyExtractor={(item) => item.id.toString()}
+							<DraggableFlatList<Player>
+								data={data}
+								// keyExtractor={(item) => item.key}
+								keyExtractor={(item: Player) => String(item.id)}
+								renderItem={renderItemPlayerRow}
+								// renderItem={({ item, index, drag, isActive }) =>
+								// 	renderItemPlayerRow({ item, drag, isActive })
+								// }
+								onDragEnd={({ data: newData }) => setData(newData)} // 👈 updates order after drop
+								// Optional niceties:
+								activationDistance={0} // start on long-press by default
+								autoscrollSpeed={50}
+								autoscrollThreshold={50}
+								// containerStyle={styles.listContainer}
+								// contentContainerStyle={styles.listContent}
 							/>
 						) : (
+							// <FlatList
+							// 	data={scriptReducer.playersArray}
+							// 	renderItem={({ item }) => <PlayerTableButton player={item} />}
+							// 	keyExtractor={(item) => item.id.toString()}
+							// />
 							<Text>No players found</Text>
 						)}
 					</View>

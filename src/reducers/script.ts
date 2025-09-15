@@ -208,7 +208,7 @@ export const scriptSlice = createSlice({
 			state,
 			action: PayloadAction<SessionAction[]>
 		) => {
-			console.log("--> updateScriptSessionActionsArray");
+			// console.log("--> updateScriptSessionActionsArray");
 			state.sessionActionsArray = action.payload;
 		},
 		updateScriptingPlayerCount: (state, action: PayloadAction<number>) => {

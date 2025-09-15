@@ -87,8 +87,8 @@ export default function ScriptingLivePortrait(
 	const dispatch = useDispatch();
 
 	const handleOnLayoutContainerMiddle = (event: any) => {
-		console.log("-- handleOnLayoutContainerMiddle --");
-		console.log(event.nativeEvent.layout);
+		// console.log("-- handleOnLayoutContainerMiddle --");
+		// console.log(event.nativeEvent.layout);
 		const { width, height, x, y } = event.nativeEvent.layout;
 
 		dispatch(
@@ -97,8 +97,8 @@ export default function ScriptingLivePortrait(
 	};
 
 	const handleOnLayoutPlayerSuperSpacer = (event: any) => {
-		console.log("--- handleOnLayoutPlayerSuperSpacer ---");
-		console.log(event.nativeEvent.layout);
+		// console.log("--- handleOnLayoutPlayerSuperSpacer ---");
+		// console.log(event.nativeEvent.layout);
 		const { width, height, x, y } = event.nativeEvent.layout;
 		dispatch(
 			updateCoordsScriptLivePortraitVwPlayerSuperSpacer({ x, y, width, height })
