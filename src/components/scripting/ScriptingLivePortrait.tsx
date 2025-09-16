@@ -77,6 +77,8 @@ interface ScriptingLivePortraitProps {
 	getSubtypeForLastAction: () => string;
 	sendScriptReducerSessionActionsArrayToServer: () => Promise<void>;
 	lastActionIsFavorite: boolean;
+	setCurrentRallyServer: (server: "analyzed" | "opponent" | null) => void;
+	currentRallyServer: "analyzed" | "opponent" | null;
 }
 
 export default function ScriptingLivePortrait(
@@ -726,7 +728,7 @@ export default function ScriptingLivePortrait(
 						<ButtonKvImage
 							onPress={() => {
 								console.log("pressed service");
-								dispatch(updateScriptSessionActionsArray([]));
+								props.setCurrentRallyServer("analyzed");
 							}}
 							style={styles.btnRallyGroupBottom}
 						>
@@ -735,6 +737,7 @@ export default function ScriptingLivePortrait(
 						<ButtonKvImage
 							onPress={() => {
 								console.log("pressed reception");
+								props.setCurrentRallyServer("opponent");
 							}}
 							style={styles.btnRallyGroupTop}
 						>
@@ -791,6 +794,9 @@ export default function ScriptingLivePortrait(
 							}{" "}
 							favorites
 						</Text>
+						<Text style={{ color: "#806181" }}>
+							Current server: {props.currentRallyServer}
+						</Text>
 					</View>
 					<View style={styles.vwSendScriptButton}>
 						<ButtonKvStd
@@ -810,7 +816,7 @@ export default function ScriptingLivePortrait(
 				</View>
 			</View>
 			{/* <View>
-				<Text>Player positions</Text>
+				<Text>currentRallyServer: {props.currentRallyServer}</Text>
 				<ScrollView style={{ height: 150 }}>
 					<Text>
 						{JSON.stringify(scriptReducer.sessionActionsArray, null, 2)}

@@ -78,6 +78,8 @@ interface ScriptingLiveLandscapeProps {
 	getSubtypeForLastAction: () => string;
 	sendScriptReducerSessionActionsArrayToServer: () => Promise<void>;
 	lastActionIsFavorite: boolean;
+	setCurrentRallyServer: (server: "analyzed" | "opponent" | null) => void;
+	currentRallyServer: "analyzed" | "opponent" | null;
 }
 
 export default function ScriptingLiveLandscape(
@@ -308,6 +310,7 @@ export default function ScriptingLiveLandscape(
 									<ButtonKvImage
 										onPress={() => {
 											console.log("pressed service");
+											props.setCurrentRallyServer("analyzed");
 										}}
 										style={stylesBtnKvImageBottomLeft}
 									>
@@ -318,6 +321,7 @@ export default function ScriptingLiveLandscape(
 									<ButtonKvImage
 										onPress={() => {
 											console.log("pressed reception");
+											props.setCurrentRallyServer("opponent");
 										}}
 										style={stylesBtnKvImageTopRight}
 									>
@@ -340,6 +344,9 @@ export default function ScriptingLiveLandscape(
 								).length
 							}{" "}
 							favorites
+						</Text>
+						<Text style={{ color: "#806181" }}>
+							Current server: {props.currentRallyServer}
 						</Text>
 					</View>
 				</View>

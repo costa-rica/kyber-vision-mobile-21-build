@@ -26,6 +26,8 @@ export interface SessionAction {
 	scoreTeamAnalyzed: number;
 	scoreTeamOther: number;
 	setNumber: number;
+	// currentPointWonByTeam?: "analyzed" | "opponent" | null;
+	currentRallyServer: "analyzed" | "opponent" | null;
 }
 
 export interface SessionPoint {

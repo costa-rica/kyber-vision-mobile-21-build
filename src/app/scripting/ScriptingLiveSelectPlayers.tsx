@@ -35,16 +35,16 @@ type ScriptingLiveSelectPlayersScreenProps = NativeStackScreenProps<
 	"ScriptingLiveSelectPlayers"
 >;
 
-interface PlayerTableButtonProps {
-	player: {
-		id: number;
-		firstName: string;
-		lastName: string;
-		shirtNumber: number;
-		positionArea?: number | null;
-		selected?: boolean;
-	};
-}
+// interface PlayerTableButtonProps {
+// 	player: {
+// 		id: number;
+// 		firstName: string;
+// 		lastName: string;
+// 		shirtNumber: number;
+// 		positionArea?: number | null;
+// 		selected?: boolean;
+// 	};
+// }
 
 // 1) Give your items a concrete, reusable type
 export interface Player {
@@ -63,7 +63,7 @@ export default function ScriptingLiveSelectPlayers({
 	const scriptReducer = useSelector((state: RootState) => state.script);
 	const teamReducer = useSelector((state: RootState) => state.team);
 	const dispatch = useDispatch<AppDispatch>();
-	const [displayWarning, setDisplayWarning] = useState(false);
+	// const [displayWarning, setDisplayWarning] = useState(false);
 
 	const topChildren = (
 		<View style={styles.vwTopChildren}>
@@ -75,7 +75,7 @@ export default function ScriptingLiveSelectPlayers({
 	);
 
 	const fetchPlayers = async () => {
-		console.log("[4] Fetching players online");
+		// console.log("[4] Fetching players online");
 		const selectedTeam = teamReducer.teamsArray.find((tribe) => tribe.selected);
 
 		if (!selectedTeam) {
@@ -110,7 +110,7 @@ export default function ScriptingLiveSelectPlayers({
 					...item,
 					selected: false,
 				}));
-				console.log(JSON.stringify(tempArray, null, 2));
+				// console.log(JSON.stringify(tempArray, null, 2));
 				dispatch(updatePlayersArray(tempArray));
 				dispatch(createPlayerArrayPositionProperties(tempArray));
 			} else {
@@ -133,26 +133,27 @@ export default function ScriptingLiveSelectPlayers({
 	};
 
 	useEffect(() => {
-		console.log("--- [1] useEffect scriptReducer.playerObjectPositionalArray");
+		// console.log("--- [1] useEffect scriptReducer.playerObjectPositionalArray");
 		scriptReducer.playerObjectPositionalArray.map((p, i) =>
 			console.log(`pos: ${i + 1}, name: ${p.firstName}`)
 		);
 		// console.log(scriptReducer.playerObjectPositionalArray)
 		if (scriptReducer.playerObjectPositionalArray.length === 0) {
-			console.log("[2] Fetching players");
+			// console.log("[2] Fetching players");
 			if (userReducer.token === "offline") {
 				fetchPlayersOffline();
 			} else {
 				fetchPlayers();
 			}
-			console.log(
-				`[5] scriptReducer.playerObjectPositionalArray.length: ${scriptReducer.playerObjectPositionalArray.length}`
-			);
-		} else {
-			console.log(
-				`[3] scriptReducer.playerObjectPositionalArray.length: ${scriptReducer.playerObjectPositionalArray.length}`
-			);
+			// console.log(
+			// 	`[5] scriptReducer.playerObjectPositionalArray.length: ${scriptReducer.playerObjectPositionalArray.length}`
+			// );
 		}
+		// else {
+		// 	console.log(
+		// 		`[3] scriptReducer.playerObjectPositionalArray.length: ${scriptReducer.playerObjectPositionalArray.length}`
+		// 	);
+		// }
 		dispatch(
 			reducerSetUserSwipePadWheel({
 				circleRadiusOuter: 60,
@@ -163,7 +164,7 @@ export default function ScriptingLiveSelectPlayers({
 	}, []);
 
 	// -- DraggableFlatList
-	const scriptReducerPlayersArray = scriptReducer.playersArray as Player[];
+	// const scriptReducerPlayersArray = scriptReducer.playersArray as Player[];
 
 	// useEffect(() => {
 	// 	setData(scriptReducerPlayersArray);
@@ -179,7 +180,7 @@ export default function ScriptingLiveSelectPlayers({
 			const handleSelectPlayer = () => {
 				const tempArray = scriptReducer.playersArray.map((p) => {
 					if (p.id === player.id) {
-						setDisplayWarning(false);
+						// setDisplayWarning(false);
 						return {
 							...p,
 							selected: !p.selected,
@@ -287,7 +288,7 @@ export default function ScriptingLiveSelectPlayers({
 					</View>
 				</View>
 				<View style={styles.containerBottom}>
-					<View style={{ padding: 5 }}>
+					{/* <View style={{ padding: 5 }}>
 						{scriptReducer.scriptingForPlayerObject ? (
 							<Text style={{ fontSize: 16, color: "black" }}>
 								scriptingForPlayerObject:{" "}
@@ -306,7 +307,7 @@ export default function ScriptingLiveSelectPlayers({
 								))}
 							</View>
 						)}
-					</View>
+					</View> */}
 					{/* <View style={styles.vwSelectPlayerWarningSuper}>
 						{displayWarning && (
 							<View style={styles.vwSelectPlayerWarning}>
