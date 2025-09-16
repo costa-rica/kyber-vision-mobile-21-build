@@ -130,9 +130,9 @@ export default function CreateTeam({ navigation }: CreateTeamProps) {
 			// name: "Add Player",
 		});
 
-		console.log("--- updatedArray ---");
-		console.log(JSON.stringify(updatedArray));
-		console.log("---------------------");
+		// console.log("--- updatedArray ---");
+		// console.log(JSON.stringify(updatedArray));
+		// console.log("---------------------");
 
 		dispatch(updatePlayersArray(updatedArray));
 		setIsVisibleModalTeamAddPlayer(false);
@@ -316,7 +316,7 @@ export default function CreateTeam({ navigation }: CreateTeamProps) {
 							<FlatList
 								data={teamReducer.playersArray as PlayerWithAddOption[]}
 								renderItem={teamTablePlayerRow}
-								keyExtractor={(item) => item.shirtNumber.toString()}
+								keyExtractor={(item, index) => index.toString()}
 								style={styles.flatListTeamNames}
 							/>
 						) : (
@@ -339,6 +339,13 @@ export default function CreateTeam({ navigation }: CreateTeamProps) {
 					<ButtonKvStd
 						onPress={() => {
 							console.log("Create Team");
+							if (teamReducer.playersArray.length < 6) {
+								Alert.alert(
+									"Error",
+									"You must have at least 6 players on a team"
+								);
+								return;
+							}
 							handleCreateTeam();
 						}}
 						style={styles.btnTribe}
