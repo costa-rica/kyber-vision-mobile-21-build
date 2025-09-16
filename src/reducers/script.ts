@@ -352,8 +352,13 @@ export const scriptSlice = createSlice({
 				positionArea: index < 6 ? index + 1 : null,
 			}));
 
+			// make a rest of players array which is all the players from the playersArray that are not in the withPositions array
+			const restOfPlayers = state.playersArray.filter((player) => {
+				return !withPositions.find((p) => p.id === player.id);
+			});
+
 			// (optional but helpful) keep playersArray in sync with the derived positions
-			state.playersArray = withPositions;
+			state.playersArray = [...withPositions, ...restOfPlayers];
 
 			// helper type (optional but nice)
 			type PlayerWithNumberPosition = Omit<Player, "positionArea"> & {
