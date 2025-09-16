@@ -260,7 +260,10 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	) => {
 		console.log("gestureTapBegin");
 
-		if (currentRallyServer === null) {
+		if (
+			currentRallyServer === null &&
+			scriptReducer.scriptingForPlayerObject !== null
+		) {
 			const confirmed = await handleCurrentRallyServerNotAssigned();
 			if (!confirmed) return;
 		}
@@ -919,7 +922,10 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 		team: "analyzed" | "opponent",
 		scoreAdjust: number
 	) => {
-		if (currentRallyServer === null) {
+		if (
+			currentRallyServer === null &&
+			scriptReducer.scriptingForPlayerObject !== null
+		) {
 			const confirmed = await handleCurrentRallyServerNotAssigned();
 			if (!confirmed) return;
 		}
@@ -1190,31 +1196,50 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 		return confirmed;
 	};
 
-	// Put near your other helpers
-	const askCurrentRallyServer = (): Promise<"analyzed" | "opponent" | null> =>
+	// Replace the old askCurrentRallyServer with this:
+	const alertUserOfServiceStatus = (): Promise<void> =>
 		new Promise((resolve) => {
 			Alert.alert(
-				"Current rally server not assigned",
-				"Who should be the current rally server?",
-				[
-					{ text: "Cancel", style: "cancel", onPress: () => resolve(null) },
-					{ text: "Analyzed", onPress: () => resolve("analyzed") },
-					{ text: "Opponent", onPress: () => resolve("opponent") },
-				],
-				{ cancelable: true, onDismiss: () => resolve(null) } // Android back/outside tap
+				"Set service status",
+				// "Please select:\n• “S” if your team is serving\n• “R” if your team is receiving",
+				"Please select: “S” or “R” if your team is receiving",
+				[{ text: "OK", onPress: () => resolve() }],
+				{ cancelable: true, onDismiss: () => resolve() }
 			);
 		});
 
-	// Call this from handleSetScorePress / gesture handlers
+	// Keep the name; now it only warns and blocks when unset
 	const handleCurrentRallyServerNotAssigned = async (): Promise<boolean> => {
-		if (currentRallyServer !== null) return true; // already chosen
-
-		const choice = await askCurrentRallyServer(); // wait for user
-		if (choice === null) return false; // user canceled
-
-		setCurrentRallyServer(choice); // persist choice
-		return true;
+		if (currentRallyServer !== null) return true; // already chosen via S/R elsewhere
+		await alertUserOfServiceStatus(); // show guidance
+		return false; // block the action for now
 	};
+	// // Put near your other helpers
+	// const askCurrentRallyServer = (): Promise<"analyzed" | "opponent" | null> =>
+	// 	new Promise((resolve) => {
+	// 		Alert.alert(
+	// 			"Current rally server not assigned",
+	// 			"Who should be the current rally server?",
+	// 			[
+	// 				{ text: "Cancel", style: "cancel", onPress: () => resolve(null) },
+	// 				{ text: "Analyzed", onPress: () => resolve("analyzed") },
+	// 				{ text: "Opponent", onPress: () => resolve("opponent") },
+	// 			],
+	// 			{ cancelable: true, onDismiss: () => resolve(null) } // Android back/outside tap
+	// 		);
+	// 	});
+
+	// // Call this from handleSetScorePress / gesture handlers
+	// const handleCurrentRallyServerNotAssigned = async (): Promise<boolean> => {
+	// 	if (currentRallyServer !== null) return true; // already chosen
+
+	// 	const choice = await askCurrentRallyServer(); // wait for user
+	// 	if (choice === null) return false; // user canceled
+
+	// 	setCurrentRallyServer(choice); // persist choice
+	// 	return true;
+	// };
+	// ----- Original code below -----
 	// const handleCurrentRallyServerNotAssigned = async () => {
 	// 	if (currentRallyServer === null) {
 	// 		// create alert with yes / no option for analyzed or opponent
