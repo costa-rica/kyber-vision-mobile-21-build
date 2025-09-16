@@ -182,47 +182,55 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 		};
 	}, []); // <-- not [orientation]
 
-	// const checkOrientation = async () => {
-	// 	const orientationObject = await ScreenOrientation.getOrientationAsync();
-	// 	if (
-	// 		orientationObject === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-	// 		orientationObject === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-	// 	) {
-	// 		setOrientation("landscape");
-	// 	} else {
-	// 		setOrientation("portrait");
-	// 	}
-	// };
+	// Server status required
+	const serverStatusRequiredFlag =
+		scriptReducer.scriptingForPlayerObject === null &&
+		currentRallyServer === null;
 
-	// Swipe Pad - 1
+	const askCurrentRallyServer = (): Promise<"analyzed" | "opponent" | null> =>
+		new Promise((resolve) => {
+			Alert.alert(
+				"Current rally server not assigned",
+				"Who should be the current rally server?",
+				[
+					{
+						text: "Cancel",
+						style: "cancel",
+						onPress: () => navigation.goBack(),
+					},
+					{ text: "Analyzed", onPress: () => resolve("analyzed") },
+					{ text: "Opponent", onPress: () => resolve("opponent") },
+				],
+				{ cancelable: true, onDismiss: () => resolve(null) } // Android back/outside tap
+			);
+		});
+	useEffect(() => {
+		if (serverStatusRequiredFlag) {
+			askCurrentRallyServer().then((choice) => {
+				if (choice === null) return;
+				setCurrentRallyServer(choice);
+			});
+		}
+	}, []);
 
-	// const handleOrientationChange = async (
-	// 	event: ScreenOrientation.OrientationChangeEvent
-	// ) => {
-	// 	const o = event.orientationInfo.orientation;
+	// Replace the old askCurrentRallyServer with this:
+	const alertUserOfServiceStatus = (): Promise<void> =>
+		new Promise((resolve) => {
+			Alert.alert(
+				"Set service status",
+				// "Please select:\n• “S” if your team is serving\n• “R” if your team is receiving",
+				"Please select: “S” or “R” if your team is receiving",
+				[{ text: "OK", onPress: () => resolve() }],
+				{ cancelable: true, onDismiss: () => resolve() }
+			);
+		});
 
-	// 	// Always unlock before switching locks
-	// 	await ScreenOrientation.unlockAsync();
-
-	// 	if (
-	// 		o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-	// 		o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-	// 	) {
-	// 		setOrientation("landscape");
-	// 		// Allow either landscape side so it never appears upside down
-	// 		await ScreenOrientation.lockAsync(
-	// 			ScreenOrientation.OrientationLock.LANDSCAPE
-	// 		);
-	// 	} else if (
-	// 		o === ScreenOrientation.Orientation.PORTRAIT_UP ||
-	// 		o === ScreenOrientation.Orientation.PORTRAIT_DOWN
-	// 	) {
-	// 		setOrientation("portrait");
-	// 		await ScreenOrientation.lockAsync(
-	// 			ScreenOrientation.OrientationLock.PORTRAIT_UP
-	// 		);
-	// 	}
-	// };
+	// Keep the name; now it only warns and blocks when unset
+	const handleCurrentRallyServerNotAssigned = async (): Promise<boolean> => {
+		if (currentRallyServer !== null) return true; // already chosen via S/R elsewhere
+		await alertUserOfServiceStatus(); // show guidance
+		return false; // block the action for now
+	};
 
 	const [padVisible, setPadVisible] = useState(false);
 	const [tapIsActive, setTapIsActive] = useState(true);
@@ -260,12 +268,9 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	) => {
 		console.log("gestureTapBegin");
 
-		if (
-			currentRallyServer === null &&
-			scriptReducer.scriptingForPlayerObject !== null
-		) {
-			const confirmed = await handleCurrentRallyServerNotAssigned();
-			if (!confirmed) return;
+		if (serverStatusRequiredFlag) {
+			await handleCurrentRallyServerNotAssigned();
+			return;
 		}
 
 		// Stop if match already won (best of 5 → first to 3)
@@ -347,7 +352,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	const handleTapEndDetected = async (
 		event: GestureStateChangeEvent<TapGestureHandlerEventPayload>
 	) => {
-		if (currentRallyServer === null) return;
+		if (serverStatusRequiredFlag) return;
 		console.log("gestureTapEnd");
 		setPadVisible(false);
 		setTapIsActive(true);
@@ -362,7 +367,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	const handleSwipeOnChange = (
 		event: GestureUpdateEvent<PanGestureHandlerEventPayload>
 	) => {
-		if (currentRallyServer === null) return;
+		if (serverStatusRequiredFlag) return;
 		const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
 		let swipePosX: number;
@@ -420,7 +425,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	const handleSwipeOnEnd = (
 		event: GestureUpdateEvent<PanGestureHandlerEventPayload>
 	) => {
-		if (currentRallyServer === null) return;
+		if (serverStatusRequiredFlag) return;
 		const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
 		const swipePosX = x - userReducer.circleRadiusOuter;
@@ -922,12 +927,9 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 		team: "analyzed" | "opponent",
 		scoreAdjust: number
 	) => {
-		if (
-			currentRallyServer === null &&
-			scriptReducer.scriptingForPlayerObject !== null
-		) {
-			const confirmed = await handleCurrentRallyServerNotAssigned();
-			if (!confirmed) return;
+		if (serverStatusRequiredFlag) {
+			await handleCurrentRallyServerNotAssigned();
+			return;
 		}
 		// Compute new set scores with floor at 0
 		let newAnalyzed = setScores.teamAnalyzed;
@@ -1195,75 +1197,6 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 		}
 		return confirmed;
 	};
-
-	// Replace the old askCurrentRallyServer with this:
-	const alertUserOfServiceStatus = (): Promise<void> =>
-		new Promise((resolve) => {
-			Alert.alert(
-				"Set service status",
-				// "Please select:\n• “S” if your team is serving\n• “R” if your team is receiving",
-				"Please select: “S” or “R” if your team is receiving",
-				[{ text: "OK", onPress: () => resolve() }],
-				{ cancelable: true, onDismiss: () => resolve() }
-			);
-		});
-
-	// Keep the name; now it only warns and blocks when unset
-	const handleCurrentRallyServerNotAssigned = async (): Promise<boolean> => {
-		if (currentRallyServer !== null) return true; // already chosen via S/R elsewhere
-		await alertUserOfServiceStatus(); // show guidance
-		return false; // block the action for now
-	};
-	// // Put near your other helpers
-	// const askCurrentRallyServer = (): Promise<"analyzed" | "opponent" | null> =>
-	// 	new Promise((resolve) => {
-	// 		Alert.alert(
-	// 			"Current rally server not assigned",
-	// 			"Who should be the current rally server?",
-	// 			[
-	// 				{ text: "Cancel", style: "cancel", onPress: () => resolve(null) },
-	// 				{ text: "Analyzed", onPress: () => resolve("analyzed") },
-	// 				{ text: "Opponent", onPress: () => resolve("opponent") },
-	// 			],
-	// 			{ cancelable: true, onDismiss: () => resolve(null) } // Android back/outside tap
-	// 		);
-	// 	});
-
-	// // Call this from handleSetScorePress / gesture handlers
-	// const handleCurrentRallyServerNotAssigned = async (): Promise<boolean> => {
-	// 	if (currentRallyServer !== null) return true; // already chosen
-
-	// 	const choice = await askCurrentRallyServer(); // wait for user
-	// 	if (choice === null) return false; // user canceled
-
-	// 	setCurrentRallyServer(choice); // persist choice
-	// 	return true;
-	// };
-	// ----- Original code below -----
-	// const handleCurrentRallyServerNotAssigned = async () => {
-	// 	if (currentRallyServer === null) {
-	// 		// create alert with yes / no option for analyzed or opponent
-	// 		// returns true or false if canceled
-	// 		const confirmed = await Alert.alert(
-	// 			"Current rally server not assigned",
-	// 			"Who should be the current rally server?",
-	// 			[
-	// 				{ text: "Cancel", style: "cancel" },
-	// 				{
-	// 					text: "Analyzed",
-	// 					onPress: () => setCurrentRallyServer("analyzed"),
-	// 				},
-	// 				{
-	// 					text: "Opponent",
-	// 					onPress: () => setCurrentRallyServer("opponent"),
-	// 				},
-	// 			],
-	// 			{ cancelable: true }
-	// 		);
-	// 		return confirmed[0].text !== "Cancel";
-	// 	}
-	// 	return true;
-	// };
 
 	return orientation == "portrait" ? (
 		<ScreenFrameWithTopChildrenSmall
