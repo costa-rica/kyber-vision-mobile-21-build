@@ -108,7 +108,7 @@ export default function Splash({ navigation }: SplashScreenProps) {
 						continue without login
 					</ButtonKvStd>
 					<Text style={{ position: "absolute", bottom: 20, right: 30 }}>
-						Version 0.20.1
+						Version 0.21.0
 					</Text>
 				</View>
 			</View>
