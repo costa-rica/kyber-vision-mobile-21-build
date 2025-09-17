@@ -27,6 +27,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "../types/store";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { useState, useEffect } from "react";
 import * as Font from "expo-font";
@@ -53,48 +54,53 @@ const Index = () => {
 	}
 	return (
 		<Provider store={store}>
-			<PersistGate persistor={persistor}>
-				<NavigationContainer>
-					<Stack.Navigator screenOptions={{ headerShown: false }}>
-						<Stack.Screen name="Splash" component={Splash} />
-						<Stack.Screen name="Login" component={Login} />
-						<Stack.Screen name="Register" component={Register} />
-						<Stack.Screen name="Logout" component={Logout} />
-						<Stack.Screen name="SelectTeam" component={SelectTeam} />
-						<Stack.Screen name="Home" component={Home} />
-						<Stack.Screen
-							name="ScriptingLiveSelectSession"
-							component={ScriptingLiveSelectSession}
-						/>
-						<Stack.Screen
-							name="ScriptingLiveSelectPlayers"
-							component={ScriptingLiveSelectPlayers}
-						/>
-						<Stack.Screen name="ScriptingLive" component={ScriptingLive} />
-						<Stack.Screen name="CreateTeam" component={CreateTeam} />
-						<Stack.Screen name="UploadVideo" component={UploadVideo} />
-						<Stack.Screen name="ReviewSelection" component={ReviewSelection} />
-						<Stack.Screen name="ReviewVideo" component={ReviewVideo} />
-						<Stack.Screen
-							name="ScriptingSyncVideoSelection"
-							component={ScriptingSyncVideoSelection}
-						/>
-						<Stack.Screen
-							name="ScriptingSyncVideo"
-							component={ScriptingSyncVideo}
-						/>
-						<Stack.Screen name="AdminSettings" component={AdminSettings} />
-						<Stack.Screen
-							name="AdminSettingsPlayerCard"
-							component={AdminSettingsPlayerCard}
-						/>
-						<Stack.Screen
-							name="AdminSettingsUserCard"
-							component={AdminSettingsUserCard}
-						/>
-					</Stack.Navigator>
-				</NavigationContainer>
-			</PersistGate>
+			<GestureHandlerRootView style={{ flex: 1 }}>
+				<PersistGate persistor={persistor}>
+					<NavigationContainer>
+						<Stack.Navigator screenOptions={{ headerShown: false }}>
+							<Stack.Screen name="Splash" component={Splash} />
+							<Stack.Screen name="Login" component={Login} />
+							<Stack.Screen name="Register" component={Register} />
+							<Stack.Screen name="Logout" component={Logout} />
+							<Stack.Screen name="SelectTeam" component={SelectTeam} />
+							<Stack.Screen name="Home" component={Home} />
+							<Stack.Screen
+								name="ScriptingLiveSelectSession"
+								component={ScriptingLiveSelectSession}
+							/>
+							<Stack.Screen
+								name="ScriptingLiveSelectPlayers"
+								component={ScriptingLiveSelectPlayers}
+							/>
+							<Stack.Screen name="ScriptingLive" component={ScriptingLive} />
+							<Stack.Screen name="CreateTeam" component={CreateTeam} />
+							<Stack.Screen name="UploadVideo" component={UploadVideo} />
+							<Stack.Screen
+								name="ReviewSelection"
+								component={ReviewSelection}
+							/>
+							<Stack.Screen name="ReviewVideo" component={ReviewVideo} />
+							<Stack.Screen
+								name="ScriptingSyncVideoSelection"
+								component={ScriptingSyncVideoSelection}
+							/>
+							<Stack.Screen
+								name="ScriptingSyncVideo"
+								component={ScriptingSyncVideo}
+							/>
+							<Stack.Screen name="AdminSettings" component={AdminSettings} />
+							<Stack.Screen
+								name="AdminSettingsPlayerCard"
+								component={AdminSettingsPlayerCard}
+							/>
+							<Stack.Screen
+								name="AdminSettingsUserCard"
+								component={AdminSettingsUserCard}
+							/>
+						</Stack.Navigator>
+					</NavigationContainer>
+				</PersistGate>
+			</GestureHandlerRootView>
 		</Provider>
 	);
 };

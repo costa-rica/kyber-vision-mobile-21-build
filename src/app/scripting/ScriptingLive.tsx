@@ -10,15 +10,16 @@ import {
 	PanGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { Platform } from "react-native";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../types/store";
 import {
 	updateScriptSessionActionsArray,
 	updatePlayersArray,
-	setScriptingForPlayerObject,
 	Player,
 	SessionAction,
+	createPlayerArrayPositionProperties,
 } from "../../reducers/script";
 import SwipePad from "../../components/swipe-pads/SwipePad";
 import { useMemo } from "react";
@@ -134,88 +135,101 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 				break;
 		}
 	};
+	const [currentRallyServer, setCurrentRallyServer] = useState<
+		"analyzed" | "opponent" | null
+	>(null);
 
 	// Orientation Stuff
 	const [orientation, setOrientation] = useState("portrait");
 
 	useEffect(() => {
-		ScreenOrientation.unlockAsync();
-		checkOrientation();
-		const subscriptionScreenOrientation =
-			ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+		let sub: ScreenOrientation.Subscription | null = null;
+
+		(async () => {
+			// Allow free rotation while on this screen (choose ALL or ALL_BUT_UPSIDE_DOWN)
+			await ScreenOrientation.lockAsync(
+				Platform.OS === "ios"
+					? ScreenOrientation.OrientationLock.DEFAULT // iPhone default excludes upside-down
+					: ScreenOrientation.OrientationLock.ALL // Android: allow all
+			);
+
+			// Set initial state once
+			const initial = await ScreenOrientation.getOrientationAsync();
+			setOrientation(
+				initial === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+					initial === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+					? "landscape"
+					: "portrait"
+			);
+
+			sub = ScreenOrientation.addOrientationChangeListener((e) => {
+				const o = e.orientationInfo.orientation;
+				setOrientation(
+					o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
+						o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
+						? "landscape"
+						: "portrait"
+				);
+			});
+		})();
 
 		return () => {
-			subscriptionScreenOrientation.remove();
+			sub?.remove();
+			// Optional safety if your exit handler always locks to PORTRAIT_UP:
 			ScreenOrientation.lockAsync(
 				ScreenOrientation.OrientationLock.PORTRAIT_UP
-			);
+			).catch(() => {});
 		};
-	});
+	}, []); // <-- not [orientation]
 
-	const checkOrientation = async () => {
-		const orientationObject = await ScreenOrientation.getOrientationAsync();
-		if (
-			orientationObject === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-			orientationObject === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-		) {
-			setOrientation("landscape");
-		} else {
-			setOrientation("portrait");
-		}
-	};
+	// Server status required
+	const serverStatusRequiredFlag =
+		scriptReducer.scriptingForPlayerObject === null &&
+		currentRallyServer === null;
 
-	// const handleOrientationChange = async (
-	// 	orientationChangeEvent: ScreenOrientation.OrientationChangeEvent
-	// ) => {
-	// 	const { orientationInfo } = orientationChangeEvent;
-	// 	console.log("----> orientationInfo", orientationInfo);
-	// 	if (
-	// 		orientationInfo.orientation ===
-	// 			ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-	// 		orientationInfo.orientation ===
-	// 			ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-	// 	) {
-	// 		setOrientation("landscape");
-	// 		await ScreenOrientation.lockAsync(
-	// 			// ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
-	// 			ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
-	// 		);
-	// 	} else {
-	// 		setOrientation("portrait");
-	// 		await ScreenOrientation.lockAsync(
-	// 			ScreenOrientation.OrientationLock.PORTRAIT_UP
-	// 		);
-	// 	}
-	// };
-
-	// Swipe Pad - 1
-
-	const handleOrientationChange = async (
-		event: ScreenOrientation.OrientationChangeEvent
-	) => {
-		const o = event.orientationInfo.orientation;
-
-		// Always unlock before switching locks
-		await ScreenOrientation.unlockAsync();
-
-		if (
-			o === ScreenOrientation.Orientation.LANDSCAPE_LEFT ||
-			o === ScreenOrientation.Orientation.LANDSCAPE_RIGHT
-		) {
-			setOrientation("landscape");
-			// Allow either landscape side so it never appears upside down
-			await ScreenOrientation.lockAsync(
-				ScreenOrientation.OrientationLock.LANDSCAPE
+	const askCurrentRallyServer = (): Promise<"analyzed" | "opponent" | null> =>
+		new Promise((resolve) => {
+			Alert.alert(
+				"Current rally server not assigned",
+				"Who should be the current rally server?",
+				[
+					{
+						text: "Cancel",
+						style: "cancel",
+						onPress: () => navigation.goBack(),
+					},
+					{ text: "Analyzed", onPress: () => resolve("analyzed") },
+					{ text: "Opponent", onPress: () => resolve("opponent") },
+				],
+				{ cancelable: true, onDismiss: () => resolve(null) } // Android back/outside tap
 			);
-		} else if (
-			o === ScreenOrientation.Orientation.PORTRAIT_UP ||
-			o === ScreenOrientation.Orientation.PORTRAIT_DOWN
-		) {
-			setOrientation("portrait");
-			await ScreenOrientation.lockAsync(
-				ScreenOrientation.OrientationLock.PORTRAIT_UP
-			);
+		});
+	useEffect(() => {
+		if (serverStatusRequiredFlag) {
+			askCurrentRallyServer().then((choice) => {
+				if (choice === null) return;
+				setCurrentRallyServer(choice);
+			});
 		}
+	}, []);
+
+	// Replace the old askCurrentRallyServer with this:
+	const alertUserOfServiceStatus = (): Promise<void> =>
+		new Promise((resolve) => {
+			Alert.alert(
+				"Set service status",
+				// "Please select:\n• “S” if your team is serving\n• “R” if your team is receiving",
+				"Please select: “S” or “R” if your team is receiving",
+				[{ text: "OK", onPress: () => resolve() }],
+				{ cancelable: true, onDismiss: () => resolve() }
+			);
+		});
+
+	// Keep the name; now it only warns and blocks when unset
+	const handleCurrentRallyServerNotAssigned = async (): Promise<boolean> => {
+		if (currentRallyServer !== null) return true; // already chosen via S/R elsewhere
+		await alertUserOfServiceStatus(); // show guidance
+		return false; // block the action for now
 	};
 
 	const [padVisible, setPadVisible] = useState(false);
@@ -249,10 +263,15 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	const [numTrianglesOuter, setNumTrianglesOuter] = useState(12);
 
 	// Gesture Stuff
-	const handleTapBeginDetected = (
+	const handleTapBeginDetected = async (
 		event: GestureStateChangeEvent<TapGestureHandlerEventPayload>
 	) => {
 		console.log("gestureTapBegin");
+
+		if (serverStatusRequiredFlag) {
+			await handleCurrentRallyServerNotAssigned();
+			return;
+		}
 
 		// Stop if match already won (best of 5 → first to 3)
 		if (matchSetsWon.teamAnalyzed === 3 || matchSetsWon.teamOpponent === 3) {
@@ -330,9 +349,10 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	const gestureTapBegin = Gesture.Tap().onBegin((event) => {
 		runOnJS(handleTapBeginDetected)(event);
 	});
-	const handleTapEndDetected = (
+	const handleTapEndDetected = async (
 		event: GestureStateChangeEvent<TapGestureHandlerEventPayload>
 	) => {
+		if (serverStatusRequiredFlag) return;
 		console.log("gestureTapEnd");
 		setPadVisible(false);
 		setTapIsActive(true);
@@ -347,6 +367,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	const handleSwipeOnChange = (
 		event: GestureUpdateEvent<PanGestureHandlerEventPayload>
 	) => {
+		if (serverStatusRequiredFlag) return;
 		const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
 		let swipePosX: number;
@@ -404,6 +425,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	const handleSwipeOnEnd = (
 		event: GestureUpdateEvent<PanGestureHandlerEventPayload>
 	) => {
+		if (serverStatusRequiredFlag) return;
 		const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
 		const swipePosX = x - userReducer.circleRadiusOuter;
@@ -718,13 +740,25 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 			);
 			return;
 		}
+
+		let playerId = null;
+		if (scriptReducer.scriptingForPlayerObject !== null) {
+			playerId = scriptReducer.scriptingForPlayerObject.id.toString();
+		} else {
+			playerId =
+				scriptReducer.playerObjectPositionalArray[
+					lastActionAreaIndexRef.current! - 1
+				].id.toString();
+		}
+
 		const newActionObj: SessionAction = {
 			dateScripted: new Date().toISOString(),
 			timestamp: Date.now(),
 			type: type,
 			subtype: null,
 			quality: quality || "0",
-			playerId: scriptReducer.scriptingForPlayerObject!.id.toString(),
+			// playerId: scriptReducer.scriptingForPlayerObject!.id.toString(),
+			playerId: playerId,
 			scriptId: null,
 			newAction: true,
 			pointId: `${Date.now()}`,
@@ -734,6 +768,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 			setNumber: matchSetsWon.teamAnalyzed + matchSetsWon.teamOpponent + 1,
 			scoreTeamAnalyzed: setScores.teamAnalyzed,
 			scoreTeamOther: setScores.teamOpponent,
+			currentRallyServer: currentRallyServer,
 		};
 
 		let tempArray = [...scriptReducer.sessionActionsArray, newActionObj];
@@ -888,10 +923,14 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 	};
 
 	// Score + Set Logic (best of 5, win by 2; set 5 to 15)
-	const handleSetScorePress = (
+	const handleSetScorePress = async (
 		team: "analyzed" | "opponent",
 		scoreAdjust: number
 	) => {
+		if (serverStatusRequiredFlag) {
+			await handleCurrentRallyServerNotAssigned();
+			return;
+		}
 		// Compute new set scores with floor at 0
 		let newAnalyzed = setScores.teamAnalyzed;
 		let newOpponent = setScores.teamOpponent;
@@ -900,6 +939,21 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 			const next = newAnalyzed + scoreAdjust;
 			if (next < 0) return;
 			newAnalyzed = next;
+
+			// --- Determine if rotation should occur ---
+			// Rotate only when the opponent served and the analyzed team just scored a point (+1)
+			const rotationFlag = scoreAdjust > 0 && currentRallyServer === "opponent";
+
+			// rotate the order of scriptReducer.playerObjectPositionalArray
+			const first = scriptReducer.playerObjectPositionalArray[0];
+			const rest = scriptReducer.playerObjectPositionalArray.slice(1);
+
+			if (rotationFlag && first)
+				dispatch(createPlayerArrayPositionProperties([...rest, first]));
+			// (optional) If you want to reflect that analyzed now serves:
+			// setCurrentRallyServer("analyzed");
+
+			// ---- END Rotation Logic ----
 		} else {
 			const next = newOpponent + scoreAdjust;
 			if (next < 0) return;
@@ -996,6 +1050,8 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 					setNumber: matchSetsWon.teamAnalyzed + matchSetsWon.teamOpponent + 1,
 					scoreTeamAnalyzed: setScores.teamAnalyzed,
 					scoreTeamOther: setScores.teamOpponent,
+					currentRallyServer: currentRallyServer,
+					// currentPointWonByTeam: team,
 				};
 
 				updatedArray = [...updatedArray, setStartAction];
@@ -1007,7 +1063,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 				teamOpponent: newOpponent,
 			});
 		}
-
+		setCurrentRallyServer(team);
 		// Persist actions array
 		dispatch(updateScriptSessionActionsArray(updatedArray));
 	};
@@ -1190,6 +1246,8 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 					sendScriptReducerSessionActionsArrayToServer
 				}
 				lastActionIsFavorite={lastActionIsFavorite()}
+				setCurrentRallyServer={setCurrentRallyServer}
+				currentRallyServer={currentRallyServer}
 			/>
 			{renderSwipePad()}
 		</ScreenFrameWithTopChildrenSmall>
@@ -1227,6 +1285,8 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 					sendScriptReducerSessionActionsArrayToServer
 				}
 				lastActionIsFavorite={lastActionIsFavorite()}
+				setCurrentRallyServer={setCurrentRallyServer}
+				currentRallyServer={currentRallyServer}
 			/>
 		</View>
 	);

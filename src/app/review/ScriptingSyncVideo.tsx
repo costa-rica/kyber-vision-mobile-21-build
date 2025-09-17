@@ -8,7 +8,7 @@ import {
 	FlatList,
 	Alert,
 } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+// import { GestureHandlerRootView } from "react-native-gesture-handler";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types/navigation";
@@ -322,7 +322,8 @@ export default function ScriptingSyncVideo({ navigation }: Props) {
 							marginVertical: 10,
 						}}
 					>
-						<GestureHandlerRootView style={styles.gestureViewTimeline}>
+						{/* <GestureHandlerRootView style={styles.gestureViewTimeline}> */}
+						<View style={styles.gestureViewTimeline}>
 							<Timeline
 								timelineWidth={Dimensions.get("window").width * 0.8}
 								playerRef={playerRef}
@@ -330,7 +331,8 @@ export default function ScriptingSyncVideo({ navigation }: Props) {
 								duration={duration}
 								onSeek={(time: number) => setCurrentTime(time)}
 							/>
-						</GestureHandlerRootView>
+							{/* </GestureHandlerRootView> */}
+						</View>
 					</View>
 				</View>
 				<View style={styles.containerBottom}>

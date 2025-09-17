@@ -26,6 +26,8 @@ export interface SessionAction {
 	scoreTeamAnalyzed: number;
 	scoreTeamOther: number;
 	setNumber: number;
+	// currentPointWonByTeam?: "analyzed" | "opponent" | null;
+	currentRallyServer: "analyzed" | "opponent" | null;
 }
 
 export interface SessionPoint {
@@ -208,7 +210,7 @@ export const scriptSlice = createSlice({
 			state,
 			action: PayloadAction<SessionAction[]>
 		) => {
-			console.log("--> updateScriptSessionActionsArray");
+			// console.log("--> updateScriptSessionActionsArray");
 			state.sessionActionsArray = action.payload;
 		},
 		updateScriptingPlayerCount: (state, action: PayloadAction<number>) => {
@@ -282,7 +284,7 @@ export const scriptSlice = createSlice({
 		},
 		setScriptingForPlayerObject: (
 			state,
-			action: PayloadAction<ScriptingPlayerObject>
+			action: PayloadAction<ScriptingPlayerObject | null>
 		) => {
 			state.scriptingForPlayerObject = action.payload;
 		},
@@ -340,14 +342,54 @@ export const scriptSlice = createSlice({
 		) => {
 			state.coordsScriptLiveLandscapeVwBelowSvgVolleyballCourt = action.payload;
 		},
-		createPlayerArrayPositionProperties: (state) => {
-			state.playersArray.forEach((player, index) => {
-				player.positionArea = index < 6 ? index + 1 : null;
+		createPlayerArrayPositionProperties: (
+			state,
+			action: PayloadAction<Player[]>
+		) => {
+			// derive a fresh array with positions (no mutation of payload)
+			const withPositions = action.payload.map((player, index) => ({
+				...player,
+				positionArea: index < 6 ? index + 1 : null,
+			}));
+
+			// make a rest of players array which is all the players from the playersArray that are not in the withPositions array
+			const restOfPlayers = state.playersArray.filter((player) => {
+				return !withPositions.find((p) => p.id === player.id);
 			});
-			state.playerObjectPositionalArray = state.playersArray.filter(
-				(player) => player.positionArea !== null
+
+			// (optional but helpful) keep playersArray in sync with the derived positions
+			state.playersArray = [...withPositions, ...restOfPlayers];
+
+			// helper type (optional but nice)
+			type PlayerWithNumberPosition = Omit<Player, "positionArea"> & {
+				positionArea: number;
+			};
+
+			// keep only the 6 positioned players, ensure it’s strictly numbers 1..6
+			state.playerObjectPositionalArray = withPositions.filter(
+				(p): p is PlayerWithNumberPosition =>
+					typeof p.positionArea === "number" &&
+					p.positionArea >= 1 &&
+					p.positionArea <= 6
 			);
 		},
+		// createPlayerArrayPositionProperties: (
+		// 	state,
+		// 	action: PayloadAction<Player[]>
+		// ) => {
+		// 	action.payload.forEach((player, index) => {
+		// 		player.positionArea = index < 6 ? index + 1 : null;
+		// 	});
+		// 	// state.playerObjectPositionalArray = action.payload.filter(
+		// 	// 	(player) => player.positionArea !== null
+		// 	// );
+		// 	state.playerObjectPositionalArray = action.payload.filter(
+		// 		(p): p is Player =>
+		// 			typeof p.positionArea === "number" &&
+		// 			p.positionArea >= 1 &&
+		// 			p.positionArea <= 6
+		// 	);
+		// },
 	},
 });
 

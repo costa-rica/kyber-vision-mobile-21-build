@@ -9,7 +9,7 @@ import {
 	ViewStyle,
 } from "react-native";
 import {
-	GestureHandlerRootView,
+	// GestureHandlerRootView,
 	GestureDetector,
 } from "react-native-gesture-handler";
 import ScreenFrameWithTopChildrenSmallLandscape from "../screen-frames/ScreenFrameWithTopChildrenSmallLandscape";
@@ -78,6 +78,8 @@ interface ScriptingLiveLandscapeProps {
 	getSubtypeForLastAction: () => string;
 	sendScriptReducerSessionActionsArrayToServer: () => Promise<void>;
 	lastActionIsFavorite: boolean;
+	setCurrentRallyServer: (server: "analyzed" | "opponent" | null) => void;
+	currentRallyServer: "analyzed" | "opponent" | null;
 }
 
 export default function ScriptingLiveLandscape(
@@ -308,6 +310,7 @@ export default function ScriptingLiveLandscape(
 									<ButtonKvImage
 										onPress={() => {
 											console.log("pressed service");
+											props.setCurrentRallyServer("analyzed");
 										}}
 										style={stylesBtnKvImageBottomLeft}
 									>
@@ -318,6 +321,7 @@ export default function ScriptingLiveLandscape(
 									<ButtonKvImage
 										onPress={() => {
 											console.log("pressed reception");
+											props.setCurrentRallyServer("opponent");
 										}}
 										style={stylesBtnKvImageTopRight}
 									>
@@ -340,6 +344,9 @@ export default function ScriptingLiveLandscape(
 								).length
 							}{" "}
 							favorites
+						</Text>
+						<Text style={{ color: "#806181" }}>
+							Current server: {props.currentRallyServer}
 						</Text>
 					</View>
 				</View>
@@ -441,32 +448,33 @@ export default function ScriptingLiveLandscape(
 								</View>
 							</View>
 						</View>
-
-						<View style={stylesVwPlayerSuperNoHeight}>
-							<View style={stylesVwPlayerAbsolutePosition}>
-								<ButtonKvNoDefault
-									onPress={() => {
-										console.log("pressed");
-										props.setDropdownVisibility("scriptingPlayer");
-									}}
-									styleView={stylesVwPlayer}
-								>
-									<View style={styles.vwPlayerLeft}>
-										<Text style={styles.txtShirtNumber}>
-											{scriptReducer.scriptingForPlayerObject?.shirtNumber}
-										</Text>
-									</View>
-									<View style={styles.vwPlayerRight}>
-										<Text style={styles.txtPlayerName}>
-											{scriptReducer.scriptingForPlayerObject?.firstName}
-										</Text>
-										<Text style={styles.txtPlayerName}>
-											{scriptReducer.scriptingForPlayerObject?.lastName}
-										</Text>
-									</View>
-								</ButtonKvNoDefault>
+						{scriptReducer.scriptingForPlayerObject && (
+							<View style={stylesVwPlayerSuperNoHeight}>
+								<View style={stylesVwPlayerAbsolutePosition}>
+									<ButtonKvNoDefault
+										onPress={() => {
+											console.log("pressed");
+											props.setDropdownVisibility("scriptingPlayer");
+										}}
+										styleView={stylesVwPlayer}
+									>
+										<View style={styles.vwPlayerLeft}>
+											<Text style={styles.txtShirtNumber}>
+												{scriptReducer.scriptingForPlayerObject?.shirtNumber}
+											</Text>
+										</View>
+										<View style={styles.vwPlayerRight}>
+											<Text style={styles.txtPlayerName}>
+												{scriptReducer.scriptingForPlayerObject?.firstName}
+											</Text>
+											<Text style={styles.txtPlayerName}>
+												{scriptReducer.scriptingForPlayerObject?.lastName}
+											</Text>
+										</View>
+									</ButtonKvNoDefault>
+								</View>
 							</View>
-						</View>
+						)}
 						{props.scriptingPlayerDropdownIsVisible && (
 							<View style={stylesDropDownScriptingPlayer}>
 								<ScrollView style={stylesDropDownScriptingPlayerScrollView}>
@@ -512,7 +520,8 @@ export default function ScriptingLiveLandscape(
 								</ScrollView>
 							</View>
 						)}
-						<GestureHandlerRootView>
+						{/* <GestureHandlerRootView> */}
+						<View style={styles.column}>
 							<GestureDetector gesture={props.combinedGestures}>
 								<View
 									style={styles.containerMiddleBottom}
@@ -548,7 +557,8 @@ export default function ScriptingLiveLandscape(
 									/>
 								</View>
 							</GestureDetector>
-						</GestureHandlerRootView>
+						</View>
+						{/* </GestureHandlerRootView> */}
 					</View>
 					<View style={styles.vwFavoriteParent}>
 						<View style={stylesVwButtonFavorite}>

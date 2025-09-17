@@ -15,7 +15,7 @@ import ButtonKvStd from "../buttons/ButtonKvStd";
 import ButtonKvNoDefaultTextOnly from "../buttons/ButtonKvNoDefaultTextOnly";
 import ButtonKvNoDefault from "../buttons/ButtonKvNoDefault";
 import {
-	GestureHandlerRootView,
+	// GestureHandlerRootView,
 	GestureDetector,
 } from "react-native-gesture-handler";
 import SvgVolleyballCourt from "../../assets/images/scripting/volleyballCourt.svg";
@@ -77,6 +77,8 @@ interface ScriptingLivePortraitProps {
 	getSubtypeForLastAction: () => string;
 	sendScriptReducerSessionActionsArrayToServer: () => Promise<void>;
 	lastActionIsFavorite: boolean;
+	setCurrentRallyServer: (server: "analyzed" | "opponent" | null) => void;
+	currentRallyServer: "analyzed" | "opponent" | null;
 }
 
 export default function ScriptingLivePortrait(
@@ -87,8 +89,8 @@ export default function ScriptingLivePortrait(
 	const dispatch = useDispatch();
 
 	const handleOnLayoutContainerMiddle = (event: any) => {
-		console.log("-- handleOnLayoutContainerMiddle --");
-		console.log(event.nativeEvent.layout);
+		// console.log("-- handleOnLayoutContainerMiddle --");
+		// console.log(event.nativeEvent.layout);
 		const { width, height, x, y } = event.nativeEvent.layout;
 
 		dispatch(
@@ -97,8 +99,8 @@ export default function ScriptingLivePortrait(
 	};
 
 	const handleOnLayoutPlayerSuperSpacer = (event: any) => {
-		console.log("--- handleOnLayoutPlayerSuperSpacer ---");
-		console.log(event.nativeEvent.layout);
+		// console.log("--- handleOnLayoutPlayerSuperSpacer ---");
+		// console.log(event.nativeEvent.layout);
 		const { width, height, x, y } = event.nativeEvent.layout;
 		dispatch(
 			updateCoordsScriptLivePortraitVwPlayerSuperSpacer({ x, y, width, height })
@@ -604,31 +606,33 @@ export default function ScriptingLivePortrait(
 				style={styles.containerMiddle}
 				onLayout={(event) => handleOnLayoutContainerMiddle(event)}
 			>
-				<View style={stylesVwPlayerSuperNoHeight}>
-					<View style={stylesVwPlayerAbsolutePosition}>
-						<ButtonKvNoDefault
-							onPress={() => {
-								console.log("pressed");
-								props.setDropdownVisibility("scriptingPlayer");
-							}}
-							styleView={stylesVwPlayer}
-						>
-							<View style={styles.vwPlayerLeft}>
-								<Text style={styles.txtShirtNumber}>
-									{scriptReducer.scriptingForPlayerObject?.shirtNumber}
-								</Text>
-							</View>
-							<View style={styles.vwPlayerRight}>
-								<Text style={styles.txtPlayerName}>
-									{scriptReducer.scriptingForPlayerObject?.firstName}
-								</Text>
-								<Text style={styles.txtPlayerName}>
-									{scriptReducer.scriptingForPlayerObject?.lastName}
-								</Text>
-							</View>
-						</ButtonKvNoDefault>
+				{scriptReducer.scriptingForPlayerObject && (
+					<View style={stylesVwPlayerSuperNoHeight}>
+						<View style={stylesVwPlayerAbsolutePosition}>
+							<ButtonKvNoDefault
+								onPress={() => {
+									console.log("pressed");
+									props.setDropdownVisibility("scriptingPlayer");
+								}}
+								styleView={stylesVwPlayer}
+							>
+								<View style={styles.vwPlayerLeft}>
+									<Text style={styles.txtShirtNumber}>
+										{scriptReducer.scriptingForPlayerObject?.shirtNumber}
+									</Text>
+								</View>
+								<View style={styles.vwPlayerRight}>
+									<Text style={styles.txtPlayerName}>
+										{scriptReducer.scriptingForPlayerObject?.firstName}
+									</Text>
+									<Text style={styles.txtPlayerName}>
+										{scriptReducer.scriptingForPlayerObject?.lastName}
+									</Text>
+								</View>
+							</ButtonKvNoDefault>
+						</View>
 					</View>
-				</View>
+				)}
 				{props.scriptingPlayerDropdownIsVisible && (
 					<View style={stylesDropDownScriptingPlayer}>
 						<ScrollView style={stylesDropDownScriptingPlayerScrollView}>
@@ -674,7 +678,8 @@ export default function ScriptingLivePortrait(
 						</ScrollView>
 					</View>
 				)}
-				<GestureHandlerRootView style={{}}>
+				{/* <GestureHandlerRootView style={{}}> */}
+				<View style={{}}>
 					<GestureDetector gesture={props.combinedGestures}>
 						<View
 							style={[
@@ -711,7 +716,8 @@ export default function ScriptingLivePortrait(
 							<SvgVolleyballCourt />
 						</View>
 					</GestureDetector>
-				</GestureHandlerRootView>
+				</View>
+				{/* </GestureHandlerRootView> */}
 			</View>
 
 			<View style={styles.containerBottom}>
@@ -722,7 +728,7 @@ export default function ScriptingLivePortrait(
 						<ButtonKvImage
 							onPress={() => {
 								console.log("pressed service");
-								dispatch(updateScriptSessionActionsArray([]));
+								props.setCurrentRallyServer("analyzed");
 							}}
 							style={styles.btnRallyGroupBottom}
 						>
@@ -731,6 +737,7 @@ export default function ScriptingLivePortrait(
 						<ButtonKvImage
 							onPress={() => {
 								console.log("pressed reception");
+								props.setCurrentRallyServer("opponent");
 							}}
 							style={styles.btnRallyGroupTop}
 						>
@@ -787,6 +794,9 @@ export default function ScriptingLivePortrait(
 							}{" "}
 							favorites
 						</Text>
+						<Text style={{ color: "#806181" }}>
+							Current server: {props.currentRallyServer}
+						</Text>
 					</View>
 					<View style={styles.vwSendScriptButton}>
 						<ButtonKvStd
@@ -806,7 +816,7 @@ export default function ScriptingLivePortrait(
 				</View>
 			</View>
 			{/* <View>
-				<Text>Player positions</Text>
+				<Text>currentRallyServer: {props.currentRallyServer}</Text>
 				<ScrollView style={{ height: 150 }}>
 					<Text>
 						{JSON.stringify(scriptReducer.sessionActionsArray, null, 2)}
