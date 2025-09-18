@@ -1,22 +1,28 @@
 {
 	"expo": {
 		"name": "kyber-vision-mobile-21",
-		"slug": "kyber-vision-mobile-21",
+		"slug": "kyber-vision-mobile-21-build",
 		"version": "1.0.0",
 		"orientation": "portrait",
-		"icon": "./src/assets/expo-assets/icon.png",
-		"scheme": "kybervisionmobile20ts",
+		"icon": "./src/assets/icon.png",
+		"scheme": "kybervisionmobile21build",
 		"userInterfaceStyle": "automatic",
 		"newArchEnabled": true,
 		"ios": {
-			"supportsTablet": true
+			"icon": "./src/assets/icon.png",
+			"supportsTablet": true,
+			"bundleIdentifier": "com.costarica.kybervisionmobile21build",
+			"infoPlist": {
+				"ITSAppUsesNonExemptEncryption": false
+			}
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./src/assets/expo-assets/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
 			},
-			"edgeToEdgeEnabled": true
+			"edgeToEdgeEnabled": true,
+			"package": "com.costarica.kybervisionmobile21build"
 		},
 		"web": {
 			"bundler": "metro",
@@ -41,7 +47,7 @@
 		"extra": {
 			"router": {},
 			"eas": {
-				"projectId": "fcebacc8-78f7-43b3-ac47-5c2c2633da01"
+				"projectId": "d9e867ce-4255-4722-87d4-2ba2c5779f90"
 			}
 		},
 		"owner": "costa-rica",
@@ -49,7 +55,7 @@
 			"policy": "appVersion"
 		},
 		"updates": {
-			"url": "https://u.expo.dev/fcebacc8-78f7-43b3-ac47-5c2c2633da01"
+			"url": "https://u.expo.dev/d9e867ce-4255-4722-87d4-2ba2c5779f90"
 		}
 	}
 }

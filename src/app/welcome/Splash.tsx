@@ -37,6 +37,9 @@ export default function Splash({ navigation }: SplashScreenProps) {
 			<View style={styles.container}>
 				{/* -------- TOP ----- */}
 				<View style={styles.containerTop}>
+					<Text style={{ color: "gray" }}>
+						API: {process.env.EXPO_PUBLIC_API_BASE_URL}
+					</Text>
 					<View style={styles.vwEmailButtons}>
 						<ButtonKvStd
 							title="Register"

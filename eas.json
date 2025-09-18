@@ -1,0 +1,31 @@
+{
+	"cli": {
+		"version": ">= 16.19.1",
+		"appVersionSource": "remote"
+	},
+	"build": {
+		"development": {
+			"developmentClient": true,
+			"distribution": "internal",
+			"channel": "development"
+		},
+		"preview": {
+			"channel": "preview",
+			"ios": { "distribution": "store" },
+			"android": { "gradleCommand": ":app:bundleRelease" }
+		},
+		"production": {
+			"autoIncrement": true,
+			"channel": "production",
+			"ios": { "distribution": "store" },
+			"android": { "gradleCommand": ":app:bundleRelease" }
+		},
+		"ios-simulator": {
+			"ios": { "simulator": true },
+			"channel": "sim"
+		}
+	},
+	"submit": {
+		"production": {}
+	}
+}
