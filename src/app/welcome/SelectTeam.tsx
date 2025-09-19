@@ -214,11 +214,12 @@ export default function SelectTeam({ navigation }: SelectTeamScreenProps) {
 						<ButtonKvNoDefaultTextOnly
 							onPress={() => {
 								// TODO: Implement join public squad
-								console.log("Join a public squad");
-								Alert.alert(
-									"Coming Soon",
-									"Join public squad feature will be implemented soon."
-								);
+								// console.log("Join a public squad");
+								// Alert.alert(
+								// 	"Coming Soon",
+								// 	"Join public squad feature will be implemented soon."
+								// );
+								navigation.navigate("JoinPublicTeam");
 							}}
 							styleView={styles.btnTribe}
 							styleText={styles.btnTribeText}

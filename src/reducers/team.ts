@@ -53,6 +53,7 @@ interface TeamState {
 	teamDetails: TeamDetails | null;
 	teamsArray: Team[];
 	squadMembersArray: SquadMember[];
+	publicTeamsArray: Team[] | null;
 }
 
 const initialState: TeamState = {
@@ -61,6 +62,7 @@ const initialState: TeamState = {
 	teamDetails: null,
 	teamsArray: [],
 	squadMembersArray: [],
+	publicTeamsArray: [],
 };
 
 export const teamSlice = createSlice({
@@ -91,6 +93,9 @@ export const teamSlice = createSlice({
 		updateSquadMembersArray: (state, action: PayloadAction<SquadMember[]>) => {
 			state.squadMembersArray = action.payload;
 		},
+		updatePublicTeamsArray: (state, action: PayloadAction<Team[]>) => {
+			state.publicTeamsArray = action.payload;
+		},
 	},
 });
 
@@ -101,6 +106,7 @@ export const {
 	clearTeamReducer,
 	updateTeamsArray,
 	updateSquadMembersArray,
+	updatePublicTeamsArray,
 } = teamSlice.actions;
 
 export default teamSlice.reducer;

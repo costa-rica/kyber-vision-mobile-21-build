@@ -20,6 +20,7 @@ import ScriptingSyncVideo from "./review/ScriptingSyncVideo";
 import AdminSettings from "./user-admin/AdminSettings";
 import AdminSettingsPlayerCard from "./user-admin/AdminSettingsPlayerCard";
 import AdminSettingsUserCard from "./user-admin/AdminSettingsUserCard";
+import JoinPublicTeam from "./welcome/JoinPublicTeam";
 
 import type { RootStackParamList } from "../types/navigation";
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -97,6 +98,7 @@ const Index = () => {
 								name="AdminSettingsUserCard"
 								component={AdminSettingsUserCard}
 							/>
+							<Stack.Screen name="JoinPublicTeam" component={JoinPublicTeam} />
 						</Stack.Navigator>
 					</NavigationContainer>
 				</PersistGate>
