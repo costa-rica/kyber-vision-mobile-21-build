@@ -14,6 +14,13 @@ import ButtonKvImage from "../../components/buttons/ButtonKvImage";
 import ButtonKvStd from "../../components/buttons/ButtonKvStd";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../reducers/user";
+import ModalForgotPasswordRequest from "../../components/modals/ModalForgotPasswordRequest";
+
+interface ModalComponentAndSetterObject {
+	modalComponent: React.ReactElement;
+	useState: boolean;
+	useStateSetter: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 export default function Login({ navigation }: LoginScreenProps) {
 	const dispatch = useDispatch();
@@ -26,6 +33,8 @@ export default function Login({ navigation }: LoginScreenProps) {
 		process.env.EXPO_PUBLIC_ENVIRONMENT_01 === "workstation" ? "test" : ""
 	);
 	const [showPassword, setShowPassword] = useState(false);
+	const [isVisibleForgotPasswordModal, setIsVisibleForgotPasswordModal] =
+		useState(false);
 
 	const handleClickLogin = async () => {
 		console.log(
@@ -81,8 +90,69 @@ export default function Login({ navigation }: LoginScreenProps) {
 		}
 	};
 
+	const handleClickForgotPassword = async () => {
+		console.log(
+			"Login ---> API URL:",
+			`${process.env.EXPO_PUBLIC_API_BASE_URL}/users/request-reset-password-email`
+		);
+
+		const bodyObj = {
+			email: email,
+		};
+
+		try {
+			const response = await fetch(
+				`${process.env.EXPO_PUBLIC_API_BASE_URL}/users/request-reset-password-email`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(bodyObj),
+				}
+			);
+
+			console.log("Received response:", response.status);
+
+			let resJson = null;
+			const contentType = response.headers.get("Content-Type");
+
+			if (contentType?.includes("application/json")) {
+				resJson = await response.json();
+			}
+
+			if (response.ok && resJson) {
+				console.log("Response ok");
+				Alert.alert("Sent email", "Check your email");
+				setIsVisibleForgotPasswordModal(false);
+			} else {
+				const errorMessage =
+					resJson?.error ||
+					`There was a server error (and no resJson): ${response.status}`;
+				Alert.alert("Error", errorMessage);
+			}
+		} catch (error) {
+			console.error("Login error:", error);
+			Alert.alert("Error", `Network error. ${error}`);
+		}
+	};
+
+	const whichModalToDisplay = (): ModalComponentAndSetterObject | undefined => {
+		if (isVisibleForgotPasswordModal) {
+			return {
+				modalComponent: (
+					<ModalForgotPasswordRequest
+						handleClickForgotPassword={handleClickForgotPassword}
+						email={email}
+						setEmail={setEmail}
+					/>
+				),
+				useState: isVisibleForgotPasswordModal,
+				useStateSetter: setIsVisibleForgotPasswordModal,
+			};
+		}
+		return undefined;
+	};
 	return (
-		<ScreenFrame>
+		<ScreenFrame modalComponentAndSetterObject={whichModalToDisplay()}>
 			<View style={styles.container}>
 				<View style={styles.containerMiddle}>
 					<Text style={{ color: "gray" }}>
@@ -140,11 +210,12 @@ export default function Login({ navigation }: LoginScreenProps) {
 						<ButtonKvStd
 							onPress={() => {
 								// TODO: Implement forgot password functionality
-								console.log("ResetPasswordRequest");
-								Alert.alert(
-									"Coming Soon",
-									"Forgot password feature will be implemented soon."
-								);
+								// console.log("ResetPasswordRequest");
+								// Alert.alert(
+								// 	"Coming Soon",
+								// 	"Forgot password feature will be implemented soon."
+								// );
+								setIsVisibleForgotPasswordModal(true);
 							}}
 							style={styles.btnForgotPassword}
 						>

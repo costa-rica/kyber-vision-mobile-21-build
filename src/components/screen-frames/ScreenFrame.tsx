@@ -1,4 +1,9 @@
-import { StyleSheet, View, Image } from "react-native";
+import {
+	StyleSheet,
+	View,
+	Image,
+	TouchableWithoutFeedback,
+} from "react-native";
 import React, { type ReactNode } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import type {
@@ -9,8 +14,24 @@ import type {
 import ButtonKvImage from "../buttons/ButtonKvImage";
 import BackArrow from "../../assets/images/screen-frame/btnBackArrow.svg";
 
-type Props = { children: ReactNode };
-export default function ScreenFrame({ children }: Props) {
+interface ModalComponentAndSetterObject {
+	modalComponent: ReactNode | null;
+	useState: boolean;
+	useStateSetter: (value: boolean) => void;
+}
+
+type Props = {
+	children: ReactNode;
+	modalComponentAndSetterObject?: ModalComponentAndSetterObject;
+};
+export default function ScreenFrame({
+	children,
+	modalComponentAndSetterObject = {
+		modalComponent: null,
+		useState: false,
+		useStateSetter: () => {},
+	},
+}: Props) {
 	const navigation = useNavigation<NavigationProp<ParamListBase>>();
 	const route = useRoute<RouteProp<ParamListBase, string>>();
 	const handleBackPress = async () => {
@@ -40,6 +61,17 @@ export default function ScreenFrame({ children }: Props) {
 				/>
 			</View>
 			<View style={styles.containerBottom}>{children}</View>
+			{modalComponentAndSetterObject.useState && (
+				<TouchableWithoutFeedback
+					onPress={() => modalComponentAndSetterObject.useStateSetter(false)}
+				>
+					<View style={styles.modalOverlay}>
+						<View onStartShouldSetResponder={() => true}>
+							{modalComponentAndSetterObject.modalComponent}
+						</View>
+					</View>
+				</TouchableWithoutFeedback>
+			)}
 		</View>
 	);
 }
@@ -70,5 +102,24 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 		alignItems: "center",
 		justifyContent: "center",
+	},
+	// Modal styles
+	modalOverlay: {
+		flex: 1,
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
+		justifyContent: "center",
+		alignItems: "center",
+		position: "absolute",
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+	},
+	modalContainer: {
+		width: "100%",
+		height: "100%",
+		justifyContent: "center",
+		alignItems: "center",
+		zIndex: 10,
 	},
 });
