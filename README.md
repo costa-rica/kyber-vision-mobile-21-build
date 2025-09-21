@@ -124,3 +124,7 @@ The app is built using React Native and Expo and TypeScript. Volley ball trainin
 - [Documentation Overview](./docs/DOCS_OVERVIEW.md)
   - [API Reference](./docs/API_REFERENCE.md)
   - [Database Schema Overview](./docs/DATABASE_SCHEMA_OVERVIEW.md)
+
+## Google Sign In
+
+For example see the [kyber-vision-mobile-12 github repo](https://github.com/costa-rica/kyber-vision-mobile-12) specifically the splash screen
