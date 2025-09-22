@@ -22,6 +22,8 @@ import AdminSettingsPlayerCard from "./user-admin/AdminSettingsPlayerCard";
 import AdminSettingsUserCard from "./user-admin/AdminSettingsUserCard";
 import JoinPublicTeam from "./welcome/JoinPublicTeam";
 
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+
 import type { RootStackParamList } from "../types/navigation";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -46,6 +48,16 @@ const Index = () => {
 			setFontsLoaded(true);
 		}
 		loadFonts();
+	}, []);
+
+	useEffect(() => {
+		GoogleSignin.configure({
+			iosClientId: process.env.EXPO_PUBLIC_GOOGLE_SIGNIN_IOS_CLIENT_ID,
+			webClientId:
+				process.env
+					.EXPO_PUBLIC_EXPO_PUBLIC_GOOGLE_SIGNIN_WEB_CLIENT_IDWEB_CLIENT_ID,
+			profileImageSize: 150,
+		});
 	}, []);
 
 	if (!fontsLoaded) {
