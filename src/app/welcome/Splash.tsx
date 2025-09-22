@@ -8,12 +8,21 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../types/store";
 import { loginUser, logoutUser } from "../../reducers/user";
 import { userReducerOffline } from "../../data/userReducerOffline";
+// import {
+// 	GoogleSignin,
+// 	isSuccessResponse,
+// 	isErrorWithCode,
+// 	statusCodes,
+// } from "@react-native-google-signin/google-signin";
+// ✅ NEW: import from the safe wrapper
 import {
-	GoogleSignin,
+	googleHasPlayServices,
+	googleSignIn,
 	isSuccessResponse,
 	isErrorWithCode,
 	statusCodes,
-} from "@react-native-google-signin/google-signin";
+	IS_EXPO_GO,
+} from "../../components/google/googleSignIn";
 
 export default function Splash({ navigation }: SplashScreenProps) {
 	const dispatch = useDispatch();
@@ -39,15 +48,125 @@ export default function Splash({ navigation }: SplashScreenProps) {
 		}
 	}, [userReducer.token, navigation]);
 
+	// const handleUserClickGoogleSignIn = async () => {
+	// 	Alert.alert(
+	// 		"Google Sign In",
+	// 		"By clicking Yes, you agree that Kyber Vision will store your Google email and name in our database. Your password will NOT be stored.",
+	// 		[
+	// 			{
+	// 				text: "Cancel",
+	// 				style: "cancel",
+	// 			},
+	// 			{
+	// 				text: "Yes",
+	// 				onPress: () => {
+	// 					handleGoogleSignIn();
+	// 				},
+	// 			},
+	// 		],
+	// 		{ cancelable: true }
+	// 	);
+	// };
+
+	// const handleGoogleSignIn = async () => {
+	// 	try {
+	// 		setIsSubmitting(true);
+	// 		await GoogleSignin.hasPlayServices();
+	// 		const response = await GoogleSignin.signIn();
+	// 		if (isSuccessResponse(response)) {
+	// 			const { idToken, user } = response.data;
+	// 			const { name, email } = user;
+	// 			const safeName = name ?? email.split("@")[0];
+	// 			// console.log("Google Sign In success", { idToken, name, email });
+	// 			// Save
+	// 			await requestRegisterOrLoginGoogle(email, safeName);
+	// 		} else {
+	// 			// This means the user cancelled the signin process
+	// 			console.log("Google Sign In failed");
+	// 		}
+	// 		setIsSubmitting(false);
+	// 	} catch (error) {
+	// 		console.error(`Google Sign In error: ${error}`);
+	// 		if (isErrorWithCode(error)) {
+	// 			switch (error.code) {
+	// 				case statusCodes.IN_PROGRESS:
+	// 					Alert.alert("Google Sign In", "User is already signing in");
+	// 					break;
+	// 				case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+	// 					Alert.alert("Google Sign In", "Play Services not available");
+	// 					break;
+	// 				case statusCodes.SIGN_IN_CANCELLED:
+	// 					Alert.alert("Google Sign In", "User cancelled the sign in");
+	// 					break;
+	// 				default:
+	// 					Alert.alert("Google Sign In", error.code);
+	// 					break;
+	// 			}
+	// 		} else {
+	// 			Alert.alert(
+	// 				"Google Sign in",
+	// 				"an error unrelated to google sign occured during the process"
+	// 			);
+	// 			console.log(error);
+	// 		}
+	// 		setIsSubmitting(false);
+	// 	}
+	// };
+
+	// const requestRegisterOrLoginGoogle = async (email: string, name: string) => {
+	// 	const response = await fetch(
+	// 		`${process.env.EXPO_PUBLIC_API_BASE_URL}/users/register-or-login-via-google`,
+	// 		{
+	// 			method: "POST",
+	// 			headers: { "Content-Type": "application/json" },
+	// 			body: JSON.stringify({ email, username: name }),
+	// 		}
+	// 	);
+
+	// 	console.log("Received response:", response.status);
+
+	// 	let resJson = null;
+	// 	const contentType = response.headers.get("Content-Type");
+
+	// 	if (contentType?.includes("application/json")) {
+	// 		resJson = await response.json();
+	// 	}
+
+	// 	if (response.status === 200) {
+	// 		console.log(`response ok`);
+	// 		resJson.email = email;
+	// 		// dispatch(
+	// 		//   loginUser({
+	// 		//     email: resJson.email,
+	// 		//     token: resJson.token,
+	// 		//   })
+	// 		// );
+	// 		dispatch(
+	// 			loginUser({
+	// 				email: resJson.user.email,
+	// 				token: resJson.token,
+	// 				username: resJson.user.email.split("@")[0],
+	// 				// contractTeamUserArray: resJson.user.ContractTeamUsers || [],
+	// 			})
+	// 		);
+	// 		navigation.navigate("Home");
+	// 	} else if (resJson?.error) {
+	// 		// setMessage(resJson.error);
+	// 		Alert.alert(
+	// 			"There was a KV server error while signing in with Google",
+	// 			resJson.error
+	// 		);
+	// 	} else {
+	// 		Alert.alert("There was a KV server error while signing in with Google");
+	// 	}
+	// };
+
 	const handleUserClickGoogleSignIn = async () => {
 		Alert.alert(
 			"Google Sign In",
 			"By clicking Yes, you agree that Kyber Vision will store your Google email and name in our database. Your password will NOT be stored.",
 			[
-				{
-					text: "Cancel",
-					style: "cancel",
-				},
+				{ text: "Cancel", style: "cancel" },
 				{
 					text: "Yes",
 					onPress: () => {
@@ -62,44 +181,51 @@ export default function Splash({ navigation }: SplashScreenProps) {
 	const handleGoogleSignIn = async () => {
 		try {
 			setIsSubmitting(true);
-			await GoogleSignin.hasPlayServices();
-			const response = await GoogleSignin.signIn();
+			await googleHasPlayServices();
+			const response = await googleSignIn();
+
 			if (isSuccessResponse(response)) {
 				const { idToken, user } = response.data;
 				const { name, email } = user;
 				const safeName = name ?? email.split("@")[0];
-				// console.log("Google Sign In success", { idToken, name, email });
-				// Save
 				await requestRegisterOrLoginGoogle(email, safeName);
 			} else {
-				// This means the user cancelled the signin process
-				console.log("Google Sign In failed");
+				// User likely cancelled
+				console.log("Google Sign In: user cancelled");
 			}
-			setIsSubmitting(false);
-		} catch (error) {
-			console.error(`Google Sign In error: ${error}`);
+		} catch (error: any) {
+			console.error(`Google Sign In error:`, error);
 			if (isErrorWithCode(error)) {
 				switch (error.code) {
-					case statusCodes.IN_PROGRESS:
+					case statusCodes?.IN_PROGRESS:
 						Alert.alert("Google Sign In", "User is already signing in");
 						break;
-					case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+					case statusCodes?.PLAY_SERVICES_NOT_AVAILABLE:
 						Alert.alert("Google Sign In", "Play Services not available");
 						break;
-					case statusCodes.SIGN_IN_CANCELLED:
+					case statusCodes?.SIGN_IN_CANCELLED:
 						Alert.alert("Google Sign In", "User cancelled the sign in");
 						break;
+					case "EXPO_GO_UNSUPPORTED":
+						Alert.alert(
+							"Google Sign In",
+							"Not available in Expo Go. Use a dev client or a build."
+						);
+						break;
 					default:
-						Alert.alert("Google Sign In", error.code);
+						Alert.alert(
+							"Google Sign In",
+							String(error.code ?? "Unknown error")
+						);
 						break;
 				}
 			} else {
 				Alert.alert(
 					"Google Sign in",
-					"an error unrelated to google sign occured during the process"
+					"An unexpected error occurred during Google Sign-In."
 				);
-				console.log(error);
 			}
+		} finally {
 			setIsSubmitting(false);
 		}
 	};
@@ -116,33 +242,22 @@ export default function Splash({ navigation }: SplashScreenProps) {
 
 		console.log("Received response:", response.status);
 
-		let resJson = null;
+		let resJson: any = null;
 		const contentType = response.headers.get("Content-Type");
-
 		if (contentType?.includes("application/json")) {
 			resJson = await response.json();
 		}
 
-		if (response.status === 200) {
-			console.log(`response ok`);
-			resJson.email = email;
-			// dispatch(
-			//   loginUser({
-			//     email: resJson.email,
-			//     token: resJson.token,
-			//   })
-			// );
+		if (response.status === 200 && resJson) {
 			dispatch(
 				loginUser({
 					email: resJson.user.email,
 					token: resJson.token,
 					username: resJson.user.email.split("@")[0],
-					// contractTeamUserArray: resJson.user.ContractTeamUsers || [],
 				})
 			);
 			navigation.navigate("Home");
 		} else if (resJson?.error) {
-			// setMessage(resJson.error);
 			Alert.alert(
 				"There was a KV server error while signing in with Google",
 				resJson.error
@@ -201,6 +316,18 @@ export default function Splash({ navigation }: SplashScreenProps) {
 					<View style={styles.vwOr}>
 						<Text>or</Text>
 					</View>
+					{/* <View style={styles.vwSocials}>
+						<ButtonKvImage
+							onPress={handleUserClickGoogleSignIn}
+							style={styles.btnGoogle}
+							disabled={isSubmitting}
+						>
+							<Image
+								source={require("../../assets/images/welcome/btnGoogle.png")}
+							/>
+						</ButtonKvImage>
+					</View> */}
+					{/* ✅ Google button now safe in all environments */}
 					<View style={styles.vwSocials}>
 						<ButtonKvImage
 							onPress={handleUserClickGoogleSignIn}
@@ -228,7 +355,7 @@ export default function Splash({ navigation }: SplashScreenProps) {
 						continue without login
 					</ButtonKvStd>
 					<Text style={{ position: "absolute", bottom: 20, right: 30 }}>
-						Version 0.21.5
+						Version 0.21.6
 					</Text>
 				</View>
 			</View>

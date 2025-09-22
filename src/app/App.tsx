@@ -22,7 +22,12 @@ import AdminSettingsPlayerCard from "./user-admin/AdminSettingsPlayerCard";
 import AdminSettingsUserCard from "./user-admin/AdminSettingsUserCard";
 import JoinPublicTeam from "./welcome/JoinPublicTeam";
 
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+// if (process.env.EXPO_PUBLIC_ENVIRONMENT_01 !== "workstation") {
+// 	import { GoogleSignin } from "@react-native-google-signin/google-signin";
+// }
+
+// ✅ NEW: use the safe wrapper
+import { configureGoogleSignin } from "../components/google/googleSignIn";
 
 import type { RootStackParamList } from "../types/navigation";
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -50,14 +55,16 @@ const Index = () => {
 		loadFonts();
 	}, []);
 
+	// useEffect(() => {
+	// 	GoogleSignin.configure({
+	// 		iosClientId: process.env.EXPO_PUBLIC_GOOGLE_SIGNIN_IOS_CLIENT_ID,
+	// 		webClientId: process.env.EXPO_PUBLIC_GOOGLE_SIGNIN_WEB_CLIENT_ID,
+	// 		profileImageSize: 150,
+	// 	});
+	// }, []);
+	// ✅ NEW: configure once; no-op in Expo Go
 	useEffect(() => {
-		GoogleSignin.configure({
-			iosClientId: process.env.EXPO_PUBLIC_GOOGLE_SIGNIN_IOS_CLIENT_ID,
-			webClientId:
-				process.env
-					.EXPO_PUBLIC_EXPO_PUBLIC_GOOGLE_SIGNIN_WEB_CLIENT_IDWEB_CLIENT_ID,
-			profileImageSize: 150,
-		});
+		configureGoogleSignin();
 	}, []);
 
 	if (!fontsLoaded) {
