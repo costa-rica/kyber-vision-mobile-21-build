@@ -240,7 +240,10 @@ export default function Splash({ navigation }: SplashScreenProps) {
 			}
 		);
 
-		console.log("Received response:", response.status);
+		console.log(
+			"Received response [requestRegisterOrLoginGoogle]:",
+			response.status
+		);
 
 		let resJson: any = null;
 		const contentType = response.headers.get("Content-Type");
@@ -258,6 +261,10 @@ export default function Splash({ navigation }: SplashScreenProps) {
 			);
 			navigation.navigate("Home");
 		} else if (resJson?.error) {
+			console.log(
+				"Received response [requestRegisterOrLoginGoogle]:",
+				resJson.error
+			);
 			Alert.alert(
 				"There was a KV server error while signing in with Google",
 				resJson.error
@@ -272,9 +279,9 @@ export default function Splash({ navigation }: SplashScreenProps) {
 			<View style={styles.container}>
 				{/* -------- TOP ----- */}
 				<View style={styles.containerTop}>
-					<Text style={{ color: "gray" }}>
+					{/* <Text style={{ color: "gray" }}>
 						API: {process.env.EXPO_PUBLIC_API_BASE_URL}
-					</Text>
+					</Text> */}
 					<View style={styles.vwEmailButtons}>
 						<ButtonKvStd
 							title="Register"
@@ -355,7 +362,7 @@ export default function Splash({ navigation }: SplashScreenProps) {
 						continue without login
 					</ButtonKvStd>
 					<Text style={{ position: "absolute", bottom: 20, right: 30 }}>
-						Version 0.21.6
+						Version 0.21.9
 					</Text>
 				</View>
 			</View>

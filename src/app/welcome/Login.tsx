@@ -155,9 +155,9 @@ export default function Login({ navigation }: LoginScreenProps) {
 		<ScreenFrame modalComponentAndSetterObject={whichModalToDisplay()}>
 			<View style={styles.container}>
 				<View style={styles.containerMiddle}>
-					<Text style={{ color: "gray" }}>
+					{/* <Text style={{ color: "gray" }}>
 						API: {process.env.EXPO_PUBLIC_API_BASE_URL}
-					</Text>
+					</Text> */}
 					<View style={styles.vwInputGroup}>
 						<Text style={styles.txtInputGroupLabel}>E-mail</Text>
 						<View style={styles.vwInputWrapper}>

@@ -35,17 +35,6 @@ type ScriptingLiveSelectPlayersScreenProps = NativeStackScreenProps<
 	"ScriptingLiveSelectPlayers"
 >;
 
-// interface PlayerTableButtonProps {
-// 	player: {
-// 		id: number;
-// 		firstName: string;
-// 		lastName: string;
-// 		shirtNumber: number;
-// 		positionArea?: number | null;
-// 		selected?: boolean;
-// 	};
-// }
-
 // 1) Give your items a concrete, reusable type
 export interface Player {
 	id: number;
@@ -134,9 +123,9 @@ export default function ScriptingLiveSelectPlayers({
 
 	useEffect(() => {
 		// console.log("--- [1] useEffect scriptReducer.playerObjectPositionalArray");
-		scriptReducer.playerObjectPositionalArray.map((p, i) =>
-			console.log(`pos: ${i + 1}, name: ${p.firstName}`)
-		);
+		// scriptReducer.playerObjectPositionalArray.map((p, i) =>
+		// 	console.log(`pos: ${i + 1}, name: ${p.firstName}`)
+		// );
 		// console.log(scriptReducer.playerObjectPositionalArray)
 		if (scriptReducer.playerObjectPositionalArray.length === 0) {
 			// console.log("[2] Fetching players");
@@ -145,15 +134,7 @@ export default function ScriptingLiveSelectPlayers({
 			} else {
 				fetchPlayers();
 			}
-			// console.log(
-			// 	`[5] scriptReducer.playerObjectPositionalArray.length: ${scriptReducer.playerObjectPositionalArray.length}`
-			// );
 		}
-		// else {
-		// 	console.log(
-		// 		`[3] scriptReducer.playerObjectPositionalArray.length: ${scriptReducer.playerObjectPositionalArray.length}`
-		// 	);
-		// }
 		dispatch(
 			reducerSetUserSwipePadWheel({
 				circleRadiusOuter: 60,
@@ -164,19 +145,11 @@ export default function ScriptingLiveSelectPlayers({
 	}, []);
 
 	// -- DraggableFlatList
-	// const scriptReducerPlayersArray = scriptReducer.playersArray as Player[];
-
-	// useEffect(() => {
-	// 	setData(scriptReducerPlayersArray);
-	// }, [scriptReducerPlayersArray]);
-	// // }, []);
-
-	// // 3) Type your local state with Player[]
-	// const [data, setData] = useState<Player[]>(scriptReducerPlayersArray);
 
 	const renderItemPlayerRow = useCallback(
 		({ item, drag, isActive }: RenderItemParams<Player>) => {
 			const player = item;
+			const playerIsActiveInCurrentMatch = player.positionArea !== null;
 			const handleSelectPlayer = () => {
 				const tempArray = scriptReducer.playersArray.map((p) => {
 					if (p.id === player.id) {
@@ -209,47 +182,40 @@ export default function ScriptingLiveSelectPlayers({
 						style={[
 							styles.btnPlayer,
 							player.selected && styles.btnPlayerSelected,
+							playerIsActiveInCurrentMatch &&
+								styles.btnPlayerIsActiveInCurrentMatch,
 						]}
 						onLongPress={drag} // 👈 hold to start dragging
 						disabled={isActive}
-						// style={[
-						//   styles.rowItem,
-						//   { backgroundColor: isActive ? "#9ca3af" : item.backgroundColor },
-						// ]}
 						activeOpacity={0.8}
 					>
-						<View style={styles.btnPlayerLeft}>
-							<Text style={styles.txtShirtNumber}>{player.shirtNumber}</Text>
+						<View style={styles.vwRowLeft}>
+							<View style={styles.vwShirtNumber}>
+								<Text style={styles.txtShirtNumber}>{player.shirtNumber}</Text>
+							</View>
+							<View style={styles.btnPlayerNameDetails}>
+								<Text style={styles.txtPlayerName}>{player.firstName}</Text>
+								<Text style={styles.txtPlayerName}>{player.lastName}</Text>
+							</View>
 						</View>
-						<View style={styles.btnPlayerRight}>
-							<Text style={styles.txtPlayerName}>{player.firstName}</Text>
-							<Text style={styles.txtPlayerName}>{player.lastName}</Text>
+						<View style={styles.vwRowRight}>
+							{playerIsActiveInCurrentMatch && (
+								<View style={styles.vwPositionArea}>
+									<Text style={styles.txtPositionAreaLabel}>
+										position area:
+									</Text>
+									<Text style={styles.txtPositionAreaValue}>
+										{player.positionArea}
+									</Text>
+								</View>
+							)}
 						</View>
-						{/* <Text style={styles.text}>{item.label}</Text>
-						<Text style={styles.hint}>Long-press & drag ↕</Text> */}
 					</TouchableOpacity>
 				</ScaleDecorator>
 			);
 		},
 		[dispatch, scriptReducer.playersArray]
 	);
-
-	// const handleSelectPlayerPress = () => {
-	// 	const selectedPlayers = scriptReducer.playersArray.filter(
-	// 		(player) => player.selected
-	// 	);
-
-	// 	if (selectedPlayers.length > 0) {
-	// 		// // TODO: Navigate to ScriptingLive when implemented
-	// 		// Alert.alert(
-	// 		// 	"Coming Soon",
-	// 		// 	"ScriptingLive screen will be implemented next"
-	// 		// );
-	// 		navigation.navigate("ScriptingLive");
-	// 	} else {
-	// 		setDisplayWarning(true);
-	// 	}
-	// };
 
 	return (
 		<ScreenFrameWithTopChildrenSmall
@@ -308,16 +274,15 @@ export default function ScriptingLiveSelectPlayers({
 							</View>
 						)}
 					</View> */}
-					{/* <View style={styles.vwSelectPlayerWarningSuper}>
-						{displayWarning && (
-							<View style={styles.vwSelectPlayerWarning}>
-								<WarningTriangle />
-								<Text style={{ color: "#E36C6C" }}>
-									Warning: Please select a player
+					<View>
+						{!scriptReducer.scriptingForPlayerObject && (
+							<View>
+								<Text style={{ color: "black" }}>
+									Presss, hold and drag to change player position
 								</Text>
 							</View>
 						)}
-					</View> */}
+					</View>
 					<View style={styles.vwInputGroup}>
 						<ButtonKvNoDefaultTextOnly
 							// active={
@@ -345,8 +310,8 @@ export default function ScriptingLiveSelectPlayers({
 		</ScreenFrameWithTopChildrenSmall>
 	);
 }
-
 const styles = StyleSheet.create({
+	// ---- Screen frame + top header ----
 	container: {
 		flex: 1,
 		justifyContent: "center",
@@ -369,6 +334,8 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: "bold",
 	},
+
+	// ---- Players table (top section) ----
 	containerTop: {
 		flex: 1,
 		width: Dimensions.get("window").width * 0.9,
@@ -387,27 +354,43 @@ const styles = StyleSheet.create({
 	vwPlayersTable: {
 		flex: 1,
 	},
+
+	// ---- Row item styles used inside DraggableFlatList renderItem ----
 	btnPlayer: {
-		flex: 1,
+		// flex: 1,
+		width: "100%", // ensure full-row width
 		alignItems: "center",
 		borderWidth: 1,
 		borderColor: "#6E4C84",
 		borderRadius: 30,
-		backgroundColor: "white",
+		// backgroundColor: "green",
 		marginVertical: 5,
 		flexDirection: "row",
 		gap: 10,
 		padding: 3,
+		overflow: "hidden", // avoid visual spill during drag/scale
 	},
 	btnPlayerSelected: {
 		backgroundColor: "gray",
 	},
-	btnPlayerLeft: {
+	btnPlayerIsActiveInCurrentMatch: {
+		borderWidth: 5,
+		borderColor: "#6E4C84",
+	},
+	vwRowLeft: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		gap: 10,
+		flexShrink: 0, // never let the left side shrink weirdly
+	},
+	vwShirtNumber: {
 		alignItems: "center",
 		justifyContent: "center",
 		backgroundColor: "#806181",
 		borderRadius: 30,
 		padding: 5,
+		// width: "10%",
 	},
 	txtShirtNumber: {
 		fontWeight: "bold",
@@ -416,7 +399,7 @@ const styles = StyleSheet.create({
 		padding: 10,
 		fontFamily: "ApfelGrotezkBold",
 	},
-	btnPlayerRight: {
+	btnPlayerNameDetails: {
 		alignItems: "center",
 		justifyContent: "center",
 	},
@@ -425,6 +408,33 @@ const styles = StyleSheet.create({
 		color: "#6E4C84",
 		fontSize: 22,
 	},
+	vwRowRight: {
+		flex: 1, // take up the remaining width
+		alignItems: "flex-end",
+		justifyContent: "center", // vertically center right-side content
+		paddingRight: 16, // smaller, consistent right padding
+		minWidth: 0, // IMPORTANT on Android: allow flex child to shrink
+	},
+	vwPositionArea: {
+		// flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		// backgroundColor: "purple",
+		// borderRadius: 30,
+		// padding: 5,
+		// width: "100%",
+		// width: "10%",
+	},
+	txtPositionAreaLabel: {
+		color: "gray",
+	},
+	txtPositionAreaValue: {
+		color: "black",
+		fontSize: 22,
+		fontWeight: "bold",
+	},
+
+	// ---- Bottom controls ----
 	containerBottom: {
 		// height: "15%",
 		width: Dimensions.get("window").width * 0.9,
