@@ -782,6 +782,7 @@ export default function ScriptingLive({ navigation }: ScriptingLiveProps) {
 		const bodyObj = {
 			actionsArray: scriptReducer.sessionActionsArray,
 			sessionId: scriptReducer.sessionsArray.find((s) => s.selected)?.id,
+			userDeviceTimestamp: new Date().toISOString(),
 		};
 
 		const response = await fetch(

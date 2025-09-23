@@ -45,6 +45,7 @@ export default function Login({ navigation }: LoginScreenProps) {
 		const bodyObj = {
 			email: email,
 			password: password,
+			userDeviceTimestamp: new Date().toISOString(),
 		};
 
 		try {
